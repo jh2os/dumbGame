@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Terminal=false
+Comment=A Simple Game
+Path=~/Development/SimpleGame/
+Exec=./engine
+Name=Engine Game
+Icon=~/Development/SimpleGame/res/icon/icon.png

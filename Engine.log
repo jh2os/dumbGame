@@ -1,0 +1,17 @@
+Initializing SDL Mixing system
+Mix_Init Error: Failed to get required support
+Mix_Init Error: Mixer not built with MOD mikmod support
+Initializing WakeEngine
+Reading in settings file: settings.conf
+Starting up SDL
+Creating Window
+Creating OpenGL Context
+Creating Shader Program: program
+Reading in shader "frag" file: res/shaders/simpleShader.frag
+Reading in shader "vert" file: res/shaders/simpleShader.vert
+Program: 1	Attaching shader: 3
+Program: 1	Attaching shader: 2
+Compiling shader program
+
+Loading model: batman.dae
+Loading model: tree.dae
