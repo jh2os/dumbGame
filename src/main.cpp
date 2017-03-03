@@ -26,25 +26,43 @@ int main() {
 	// Set up views
 	EngineCamera camera1(e->settings->i("resX"), e->settings->i("resY"));
 	camera1.setPositionAndOrigin(
-		glm::vec3(0,0,20),
-		glm::vec3(0,0,0)
+		glm::vec3(50.5,5,5),
+		glm::vec3(50,0,-50)
 	);
+
+	Model models[10000];
+	for(unsigned int i = 0; i < 10000; i++) {
+		models[i] = Model();
+		models[i].setScale(glm::vec3(0.3,0.3,0.3));
+		unsigned int x = i % 100;
+		unsigned int y = i / 100;
+		float nY = (float)y;
+		float nX = (float)x;
+		if (y % 2 == 1) {
+			nX = (float)x + 0.5f;
+		} else
+			nX = (float)x;
+		models[i].setPosition(glm::vec3(nX, 0.0f, -nY));
+		models[i].rotate(-90, glm::vec3(1,0,0));
+	}
 
 	e->audio.loadSound("jump", "res/audio/sounds/jump.wav");
 	e->audio.loadMusic("song", "res/audio/music/indianaJones.mp3");
 	e->mesh["whale"] = new Mesh("res/meshes/bat", "batman.dae");
 	e->mesh["dwarf"] = new Mesh("res/meshes/tree" , "tree.dae");
 	Model pModel;
-	pModel.physics = true;
+	pModel.physics = false;//true;
+	pModel.setScale(glm::vec3(0.3,0.3,0.3));
 	pModel.setPosition(glm::vec3(0.0, 0.0, 0.0));
 	pModel.rotate(-90, glm::vec3(1,0,0));
 	pModel.verticalSpeed = 0.01;
 	//Mix_PlayMusic(e->audio.music["song"], -1);
 
 	Model pModel2;
-	pModel2.setPosition(glm::vec3(0.0, 0.0, 0.0));
+	pModel2.setScale(glm::vec3(0.3,0.3,0.35));
+	pModel2.setPosition(glm::vec3(1.0, 0.0, 0.0));
 	pModel2.rotate(-90, glm::vec3(1,0,0));
-	pModel2.setScale(glm::vec3(1.0,1.0,1.0));
+
 	// Game loop
 	//  > Handle Input
 	//	> Pause tickcount for logic and render
@@ -67,9 +85,9 @@ int main() {
 
 		Timer::Instance()->newLoop();
 
-		pModel2.rotate(-0.1, glm::vec3(0,0,1));
+		//pModel2.rotate(-0.1, glm::vec3(0,0,1));
 		// Movement ======================================
-		pModel.rotate(-1, glm::vec3(0,0,1));
+		//pModel.rotate(-1, glm::vec3(0,0,1));
 		if (pModel.getPosition().y <=	 0.0f) {
 			pModel.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 			jumpspeed = (jumpspeed >= 1.0) ? 1.0 : jumpspeed + 0.2;
@@ -94,13 +112,20 @@ int main() {
 		//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 		glClearColor(1,1,1,1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		e->glh.useProgram("program");
+		/*e->glh.useProgram("program");
 		pModel.bindUniform(e->glh.activeProgram, "MVP", &camera1);
-		e->mesh["whale"]->render(e->glh.activeProgram, "texUnit");
+		e->mesh["dwarf"]->render(e->glh.activeProgram, "texUnit");
 
 		e->glh.useProgram("program");
 		pModel2.bindUniform(e->glh.activeProgram, "MVP", &camera1);
-		e->mesh["dwarf"]->render(e->glh.activeProgram, "texUnit");
+		e->mesh["dwarf"]->render(e->glh.activeProgram, "texUnit");*/
+
+
+		for(unsigned int i = 0; i < 10000; i++) {
+			e->glh.useProgram("program");
+			models[i].bindUniform(e->glh.activeProgram, "MVP", &camera1);
+			e->mesh["dwarf"]->render(e->glh.activeProgram, "texUnit");
+		}
 		SDL_GL_SwapWindow(e->window);
 		//================================================
 	}
