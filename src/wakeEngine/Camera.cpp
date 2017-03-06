@@ -4,8 +4,8 @@ using namespace std;
 EngineCamera::EngineCamera() {}
 
 EngineCamera::EngineCamera(int resX, int resY) {
-  projection = glm::perspective(glm::radians(45.0f), (float)resX/ resY, 0.1f, 100.f);
-  
+  projection = glm::perspective(glm::radians(45.0f), (float)resX/ resY, 0.1f, 200.f);
+
   position = glm::vec3(0.0f, 0.0f, 2.0f);
   origin = glm::vec3(0.0f, 0.0f, 0.0f);
   orientation = glm::vec3 (0,1,0);
@@ -41,4 +41,3 @@ void EngineCamera::setOrientation(glm::vec3 nOrientation) {
 glm::mat4 EngineCamera::getMVP() {
   return mvp;
 }
-

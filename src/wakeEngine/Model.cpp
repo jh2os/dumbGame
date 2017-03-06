@@ -56,10 +56,12 @@ glm::mat4 Model::projectModel(EngineCamera *camera) {
 
 void Model::bindUniform(GLuint program, string uniform, EngineCamera *camera) {
   GLuint MatrixID = glGetUniformLocation(program, uniform.c_str());
+  GLuint ModelID = glGetUniformLocation(program, "Model");
   glm::mat4 mvp = camera->getMVP();
   glm::mat4 model = modelMatrix();
-  mvp = mvp * model;
+  //mvp = mvp * model;
   glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+  glUniformMatrix4fv(ModelID, 1, GL_FALSE, &model[0][0]);
 }
 
 void Model::updatePosition() {
