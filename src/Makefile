@@ -1,6 +1,6 @@
 TARGET=engine
 OBJDIR = obj/
-OBJS = $(OBJDIR)main.o $(OBJDIR)Logger.o $(OBJDIR)Settings.o $(OBJDIR)Timer.o $(OBJDIR)Audio.o $(OBJDIR)Mesh.o $(OBJDIR)glHelper.o $(OBJDIR)Model.o $(OBJDIR)WakeEngine.o  $(OBJDIR)Camera.o $(OBJDIR)PhysicsModel.o
+OBJS = $(OBJDIR)dungeon.o $(OBJDIR)main.o $(OBJDIR)Logger.o $(OBJDIR)Settings.o $(OBJDIR)Timer.o $(OBJDIR)Audio.o $(OBJDIR)Mesh.o $(OBJDIR)glHelper.o $(OBJDIR)Model.o $(OBJDIR)WakeEngine.o  $(OBJDIR)Camera.o $(OBJDIR)PhysicsModel.o
 CC=gcc
 CXX=g++
 RM=rm -f
@@ -17,6 +17,9 @@ ESRCS = $(wildcard wakeEngine/*.cpp);
 
 $(TARGET): $(OBJS)
 	$(CXX) $(OBJS) $(LDLIBS) $(LDFLAGS) -o ../$@
+
+$(OBJDIR)dungeon.o: dungeon.cpp dungeon.h
+		$(CXX) $(CPPFLAGS) $(LDLIBS) dungeon.cpp -o $@
 
 $(OBJDIR)main.o: main.cpp
 	$(CXX) $(CPPFLAGS) $(LDLIBS) main.cpp -o $@

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include "dungeon.h"
 
 using namespace std;
 
@@ -29,7 +30,7 @@ int main() {
 	//gamestate("titleScreen");
 	// Set up views
 	EngineCamera camera1(e->settings->i("resX"), e->settings->i("resY"));
-	glm::vec3 cam1pos = glm::vec3(52.5,5,20);
+	glm::vec3 cam1pos = glm::vec3(60,50,50);
 	glm::vec3 cam1ori = glm::vec3(50,0,-50);
 	camera1.setPositionAndOrigin(cam1pos,cam1ori);
 	float adder = -4.0f;
@@ -52,6 +53,7 @@ int main() {
 		models[i].setPosition(glm::vec3(nX, 0.0f, -nY));
 		models[i].rotate(-90, glm::vec3(1,0,0));
 	}
+	dungeon *dd = new dungeon((int)100, (int)100, (int)0, (int)20, (int)20, 50);
 
 	e->audio.loadSound("jump", "res/audio/sounds/jump.wav");
 	e->audio.loadMusic("song", "res/audio/music/indianaJones.mp3");
@@ -68,14 +70,14 @@ int main() {
 	//	> Render
 
 	// Main Loop =================================================================
-	float jumpspeed = 0.10;
+	//float jumpspeed = 0.10;
 	bool running = true;
-	SDL_Event ev;
+	SDL_Event e;
 	unsigned int fpsRate = 1000 / 60;
 	unsigned int targetFrame = SDL_GetTicks() + fpsRate;
 	while(running) {
-		while(SDL_PollEvent(&ev)) {
-				if(ev.type == SDL_QUIT) {
+		while(SDL_PollEvent(&e)) {
+				if(e.type == SDL_QUIT) {
 					running = false;
 				}
 		}
@@ -99,7 +101,7 @@ int main() {
 		}
 		lightPos.x = lightPos.x + adder;
 		cam1pos.x = cam1pos.x + (adder * 0.05f);
-		camera1.setPositionAndOrigin(cam1pos,cam1ori);
+		//camera1.setPositionAndOrigin(cam1pos,cam1ori);
 
 		//================================================
 
@@ -125,8 +127,9 @@ int main() {
 				GLint lightPosLoc = glGetUniformLocation(e->glh.activeProgram, "lightPos");
 				glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
 				models[i].bindUniform(e->glh.activeProgram, "MVP", &camera1);
-				int test = rand() % 8 + 1;
-				if (test == 1) {
+				//int test = rand() % 8 + 1;
+				//if (test == 1) {
+				if(dd->tiles[i].type != FLOOR) {
 					e->mesh["dwarf"]->render(e->glh.activeProgram, "texUnit");
 				}
 			}
