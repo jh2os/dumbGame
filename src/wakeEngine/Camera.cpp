@@ -15,7 +15,7 @@ EngineCamera::EngineCamera(int resX, int resY) {
 
 void EngineCamera::compileCamera() {
   view = glm::lookAt(position, origin, orientation);
-  mvp = projection * view;
+  //mvp = projection * view;
 }
 void EngineCamera::setProjection(glm::mat4 nProjection) {
   projection = nProjection;
@@ -32,8 +32,18 @@ void EngineCamera::setOrigin(glm::vec3 nOrigin) {
 void EngineCamera::setPositionAndOrigin(glm::vec3 nPosition, glm::vec3 nOrigin) {
   position = nPosition;
   origin = nOrigin;
-  compileCamera();
+  view = glm::lookAt(position, origin, orientation);
+  //compileCamera();
 }
+
+glm::mat4 EngineCamera::getProjection(){
+  return projection;
+}
+
+glm::mat4 EngineCamera::getView() {
+  return view;
+}
+
 void EngineCamera::setOrientation(glm::vec3 nOrientation) {
   orientation = nOrientation;
   compileCamera();

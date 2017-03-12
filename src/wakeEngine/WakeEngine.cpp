@@ -21,6 +21,9 @@ void WakeEngine::init(std::string settingsFile) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
 	SDL_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
+	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	log->writeLine("Creating Window");
 	window = SDL_CreateWindow(
 			   settings->s("program").c_str(),
@@ -43,12 +46,14 @@ void WakeEngine::init(std::string settingsFile) {
 
 	log->writeLine("Creating OpenGL Context");
 	gl = SDL_GL_CreateContext(window);
-	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES );
-	glewExperimental = GL_TRUE;
 
+
+	glewExperimental = GL_TRUE;
 	glewInit();
-	glEnable(GL_BLEND);
+	/*glEnable(GL_BLEND);
+	std::cout << "00003. "<< glGetError() << std::endl;
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	std::cout << "00004. "<< glGetError() << std::endl;*/
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_ALPHA_TEST);
 	glEnable(GL_TEXTURE_2D);

@@ -1,13 +1,12 @@
-#version 300 es
+#version 330 core
 precision mediump float;
 
 uniform sampler2D texUnit;
 uniform vec3 lightPos;
 
 in vec2 TexCoord;
-in vec3 Normal;
 in vec3 FragPos;
-
+in vec3 Normal;
 
 out vec4 outputF;
 
@@ -15,6 +14,7 @@ void main()
 {
 
     vec4 test = texture2D(texUnit, TexCoord);
+    test = vec4(test.x, test.y, test.z, 1.0f);
 
     float ambientStrength = 0.5f;
     vec3 LightColor = vec3(1.0f, 1.0f, 1.0f);

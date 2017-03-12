@@ -13,5 +13,9 @@ Program: 1	Attaching shader: 3
 Program: 1	Attaching shader: 2
 Compiling shader program
 
-Loading model: batman.dae
+Loading model: dirt.dae
+Loaded in texture res/meshes/dirt/dirt.png into surface
+Loaded in texture res/meshes/dirt/dirt.png texid: 1
 Loading model: tree.dae
+Loaded in texture res/meshes/tree/tree.png into surface
+Loaded in texture res/meshes/tree/tree.png texid: 2

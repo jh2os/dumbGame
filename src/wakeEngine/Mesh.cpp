@@ -6,11 +6,11 @@ MeshObject::MeshObject(aiMesh *mesh) {
 	vbo[TEXCOORD_BUFFER] = 0;
 	vbo[NORMAL_BUFFER] = 0;
 	vbo[INDEX_BUFFER] = 0;
+	vbo[INSTANCE_BUFFER] = 0;
 	this->diffuseTexture = 0;
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
-
 	elementCount = mesh->mNumFaces * 3;
 	//std::cout << glGetError() << std::endl;
 	if(mesh->HasPositions()) {
@@ -30,16 +30,14 @@ MeshObject::MeshObject(aiMesh *mesh) {
 			GL_ARRAY_BUFFER,
 			3 * mesh->mNumVertices * sizeof(GLfloat),
 			&vertices[0],
-			GL_STATIC_DRAW
+			GL_STREAM_DRAW
 		);
 			//std::cout << glGetError() << std::endl;
+			glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-		glEnableVertexAttribArray(0);
 		//delete[] vertices;
 	}
-
 	if(mesh->HasTextureCoords(0)) {
-		//std::cout << "Number of texture coords" << mesh->mTextureCoords.Length() << std::endl;
 		GLfloat *texCoords = new GLfloat[mesh->mNumVertices * 2];
 		for(unsigned int i = 0; i < mesh->mNumVertices; ++i) {
 			//std::cout << mesh->mTextureCoords[0][i].x << ":" << mesh->mTextureCoords[0][i].y << ":" << mesh->mTextureCoords[0][i].z << std::endl;
@@ -52,7 +50,7 @@ MeshObject::MeshObject(aiMesh *mesh) {
 		glBufferData(
 			GL_ARRAY_BUFFER,
 			2 * mesh->mNumVertices * sizeof(GLfloat),
-			texCoords,
+			&texCoords[0],
 			GL_STATIC_DRAW
 		);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
@@ -60,7 +58,6 @@ MeshObject::MeshObject(aiMesh *mesh) {
 	//std::cout << glGetError() << std::endl;
 		//delete[] texCoords;
 	}
-
 	if(mesh->HasNormals()) {
 		GLfloat *normals = new GLfloat[mesh->mNumVertices * 3];
 		for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
@@ -77,13 +74,12 @@ MeshObject::MeshObject(aiMesh *mesh) {
 			normals,
 			GL_STATIC_DRAW
 		);
-
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
 	//std::cout << glGetError() << std::endl;
 		//delete[] normals;
 	}
-
 	if(mesh->HasFaces()) {
 		GLuint *indices = new GLuint[mesh->mNumFaces * 3];
 		for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
@@ -93,9 +89,9 @@ MeshObject::MeshObject(aiMesh *mesh) {
 		}
 
 		glGenBuffers(1, &vbo[INDEX_BUFFER]);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[INDEX_BUFFER]);
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER , vbo[INDEX_BUFFER]);
 		glBufferData(
-			GL_ELEMENT_ARRAY_BUFFER,
+			 GL_ELEMENT_ARRAY_BUFFER ,
 			3 * mesh->mNumFaces * sizeof(GLuint),
 			indices,
 			GL_STATIC_DRAW
@@ -105,10 +101,10 @@ MeshObject::MeshObject(aiMesh *mesh) {
 		glEnableVertexAttribArray(3);
 	//std::cout << glGetError() << std::endl;
 		//delete[] indices;
-	}
+	} else { std::cout << "no faces?!?!?" << std::endl;}
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindVertexArray(0);
 }
 
 MeshObject::~MeshObject() {
@@ -131,18 +127,37 @@ void MeshObject::render(GLint program, std::string textureUniform) {
 
 	glUseProgram(program);
 	GLint uniformTex = glGetUniformLocation(program, textureUniform.c_str());
+
 	if (this->diffuseTexture != 0) {
+		//glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D,this->diffuseTexture);
 		glUniform1i(uniformTex, 0);
 	}
+
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, NULL);
+	//glDrawElementsInstanced(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, NULL, 100);
+
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
 }
 
+void MeshObject::renderInstanced(GLint program, std::string textureUniform, int instances){
+	glUseProgram(program);
+	GLint uniformTex = glGetUniformLocation(program, textureUniform.c_str());
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D,this->diffuseTexture);
+	glUniform1i(uniformTex, 0);
+	glBindVertexArray(vao);
+	glDrawElementsInstanced(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, 0,  instances + 1);
 
+
+	glBindVertexArray(0);
+
+	//glUseProgram(0);
+
+}
 Mesh::Mesh(std::string folder, std::string file) {
 		//std::cout << glGetError() << std::endl;
 	Assimp::Importer importer;
@@ -299,7 +314,6 @@ Mesh::Mesh(std::string folder, std::string file) {
 		//std::cout << std::endl << std::endl;
 	}
 
-
 	//Logger::Instance()->closeLogFile();
 }
 
@@ -317,6 +331,11 @@ void Mesh::render(GLint program, std::string textureUniform) {
 	}
 }
 
+void Mesh::renderInstanced(GLint program, std::string textureUniform, int instances){
+	for(unsigned int i = 0; i < mesh.size(); ++i) {
+		mesh.at(i)->renderInstanced(program, textureUniform, instances);
+	}
+}
 
 Uint32 getPixel32(SDL_Surface *surface, int x, int y) {
 	Uint32 *pixels = (Uint32*)surface->pixels;
@@ -331,7 +350,7 @@ void putPixel32(SDL_Surface *surface, int x, int y, Uint32 pixel) {
 int loadTexture(std::string filename) {
 
 	//std::cout << "\tloading in texture right now: " << filename << std::endl;
-
+	glBindTexture(GL_TEXTURE_2D,0);
 	GLuint TextureID = 0;
 	SDL_Surface* surf;
 	surf = NULL;
@@ -340,12 +359,18 @@ int loadTexture(std::string filename) {
 	if(!surf) {
 		std::cout << "IMG_Load: " << IMG_GetError() << std::endl;
 		Logger::Instance()->writeLine("IMG_Load ERROR: ",IMG_GetError());
+	} else {
+		Logger::Instance()->writeLine("Loaded in texture ",filename , " into surface");
 	}
 	glGenTextures(1, &TextureID);
 	//std::cout << "\tTHIS IS THE TEXTURE ID " << TextureID << std::endl;
 	glBindTexture(GL_TEXTURE_2D,TextureID);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	int Mode = GL_RGBA;
 
 	if(surf->format->BytesPerPixel == 3) {
@@ -353,8 +378,33 @@ int loadTexture(std::string filename) {
 	} else if (surf->format->BytesPerPixel == 4) {
 		Mode = GL_RGBA;
 	}
-	glTexImage2D(	GL_TEXTURE_2D,0,surf->format->BytesPerPixel,surf->w,surf->h,0,Mode,GL_UNSIGNED_BYTE,surf->pixels);
+	glTexImage2D(	GL_TEXTURE_2D,0,Mode,surf->w,surf->h,0,Mode,GL_UNSIGNED_BYTE,surf->pixels);
+	Logger::Instance()->writeLine("Loaded in texture ",filename , " texid: ", TextureID);
 	SDL_FreeSurface(surf);
 	surf = NULL;
 	return TextureID;
+}
+
+void Mesh::instance(std::vector<GLfloat> instanceData) {
+	for (unsigned int i = 0; i < mesh.size(); i++) {
+		mesh[i]->instance(instanceData);
+	}
+}
+
+void MeshObject::instance(std::vector<GLfloat> instanceData){
+	//glBindVertexArray(vao);
+	glGenBuffers(1, &vbo[INSTANCE_BUFFER]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[INSTANCE_BUFFER]);
+	//std::cout << instanceData.size() << std::endl;
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		(instanceData.size() +1) * sizeof(GLfloat),
+		&instanceData[0],
+		GL_STATIC_DRAW
+	);
+
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, 0);
+	glVertexAttribDivisor(4, 1);
+	//glEnable(GL_DEPTH_TEST);
 }

@@ -55,13 +55,44 @@ glm::mat4 Model::projectModel(EngineCamera *camera) {
 }
 
 void Model::bindUniform(GLuint program, string uniform, EngineCamera *camera) {
-  GLuint MatrixID = glGetUniformLocation(program, uniform.c_str());
-  GLuint ModelID = glGetUniformLocation(program, "Model");
-  glm::mat4 mvp = camera->getMVP();
+  //GLuint MatrixID = glGetUniformLocation(program, uniform.c_str());
+  //GLuint ModelID = glGetUniformLocation(program, "Model");
+  //GLuint ViewID = glGetUniformLocation(program, "View");
+  //GLuint ProjectionID = glGetUniformLocation(program, "Projection");
+  //glm::mat4 mvp = camera->getMVP();
   glm::mat4 model = modelMatrix();
+  glm::mat4 view = camera->getView();
+  glm::mat4 projection = camera->getProjection();
+  GLuint mid = getUniform(program, 0);
+  GLuint vid = getUniform(program, 1);
+  GLuint pid = getUniform(program, 2);
   //mvp = mvp * model;
-  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
-  glUniformMatrix4fv(ModelID, 1, GL_FALSE, &model[0][0]);
+  //glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+  glUniformMatrix4fv(mid, 1, GL_FALSE, &model[0][0]);
+  glUniformMatrix4fv(vid, 1, GL_FALSE, &view[0][0]);
+  glUniformMatrix4fv(pid, 1, GL_FALSE, &projection[0][0]);
+
+}
+
+GLuint Model::getUniform(GLuint program, int typeofu) {
+  if (uniforms[program].ModelID == 0 && uniforms[program].ViewID == 0 && uniforms[program].ProjectionID == 0 ) {
+    //std::cout << "In here, program: " << program << "\ttype: " << typeofu << std::endl;
+    uniforms[program].ModelID = glGetUniformLocation(program, "Model");
+    uniforms[program].ViewID = glGetUniformLocation(program, "View");
+    uniforms[program].ProjectionID = glGetUniformLocation(program, "Projection");
+  }
+  switch (typeofu) {
+    case 0:
+      return uniforms[program].ModelID;
+      break;
+    case 1:
+      return uniforms[program].ViewID;
+      break;
+    case 2:
+      return uniforms[program].ProjectionID;
+      break;
+  }
+  return -1;
 }
 
 void Model::updatePosition() {

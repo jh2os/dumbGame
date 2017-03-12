@@ -13,7 +13,7 @@ class EngineCamera {
   glm::vec3 origin;
   glm::vec3 orientation;
   void compileCamera();
-  
+
  public:
   EngineCamera();
   EngineCamera(int resX, int resY);
@@ -22,8 +22,10 @@ class EngineCamera {
   void setOrigin(glm::vec3 nOrigin);
   void setPositionAndOrigin(glm::vec3 nPosition, glm::vec3 nOrigin);
   void setOrientation(glm::vec3 nOrientation);
+  glm::mat4 getProjection();
+  glm::mat4 getView();
   glm::mat4 getMVP();
-  
+
 };
 
 

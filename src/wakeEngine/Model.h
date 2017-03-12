@@ -12,6 +12,13 @@ struct modelData {
   GLuint size;
 };
 
+struct mvpstuff {
+  GLuint ModelID;
+  GLuint ViewID;
+  GLuint ProjectionID;
+  mvpstuff() {ModelID = 0; ViewID = 0; ProjectionID = 0;}
+};
+
 class Model: public PhysicsModel {
  private:
   glm::mat4 MVP;
@@ -26,7 +33,7 @@ class Model: public PhysicsModel {
   float rotation;
   glm::vec3 rotationAxis;
   glm::vec3 modelScale;
-
+  std::map<GLuint, mvpstuff> uniforms;
  public:
   bool physics;
   Model();
@@ -39,7 +46,7 @@ class Model: public PhysicsModel {
   glm::mat4 modelMatrix();
   glm::mat4 projectModel(EngineCamera *camera);
   void bindUniform(GLuint program, std::string uniform, EngineCamera *camera);
-
+  GLuint getUniform(GLuint program, int type);
   void updatePosition();
   void checkCollision();
 };

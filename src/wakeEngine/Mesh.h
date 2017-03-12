@@ -10,17 +10,19 @@
 
 struct MeshObject {
 	enum BUFFERS {
-		VERTEX_BUFFER,TEXCOORD_BUFFER,NORMAL_BUFFER,INDEX_BUFFER
+		VERTEX_BUFFER,TEXCOORD_BUFFER,NORMAL_BUFFER,INDEX_BUFFER,INSTANCE_BUFFER,
 	};
 
 	GLuint vao;
-	GLuint vbo[4];
+	GLuint vbo[5];
 	GLuint diffuseTexture;
 	unsigned int elementCount;
 	MeshObject(aiMesh *mesh);
 	~MeshObject();
 	void load(aiMesh *mesh);
 	void render(GLint program, std::string textureUniform);
+	void renderInstanced(GLint program, std::string textureUniform, int instances);
+	void instance(std::vector<GLfloat> instanceData);
 };
 
 
@@ -30,6 +32,8 @@ public:
 	Mesh(std::string folder, std::string file);
 	~Mesh(void);
 	void render(GLint program, std::string textureUniform);
+		void renderInstanced(GLint program, std::string textureUniform, int instances);
+	void instance(std::vector<GLfloat> instanceData);
 	std::vector<GLint> textures;
 	GLint tex;
 };
