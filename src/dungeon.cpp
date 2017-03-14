@@ -338,3 +338,7 @@ void dungeon::display() {
     std::cout << std::endl;
   }
 }
+
+int dungeon::getTile(int x, int y) {
+  return tiles[(y * dungeonWidth) + x].type;
+}

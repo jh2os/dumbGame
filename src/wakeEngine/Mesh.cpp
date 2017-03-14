@@ -378,7 +378,7 @@ int loadTexture(std::string filename) {
 	} else if (surf->format->BytesPerPixel == 4) {
 		Mode = GL_RGBA;
 	}
-	glTexImage2D(	GL_TEXTURE_2D,0,Mode,surf->w,surf->h,0,Mode,GL_UNSIGNED_BYTE,surf->pixels);
+	glTexImage2D(	GL_TEXTURE_2D,0,GL_RGBA,surf->w,surf->h,0,GL_RGBA,GL_UNSIGNED_BYTE,surf->pixels);
 	Logger::Instance()->writeLine("Loaded in texture ",filename , " texid: ", TextureID);
 	SDL_FreeSurface(surf);
 	surf = NULL;

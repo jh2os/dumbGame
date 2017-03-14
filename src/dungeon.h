@@ -81,6 +81,7 @@ public:
   void init();
   room genRoom(coord entrance, direction dir, int roomNumber);
   void display();
+  int getTile(int x, int y);
 
 };
 

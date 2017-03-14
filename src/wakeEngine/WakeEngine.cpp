@@ -50,13 +50,12 @@ void WakeEngine::init(std::string settingsFile) {
 
 	glewExperimental = GL_TRUE;
 	glewInit();
-	/*glEnable(GL_BLEND);
-	std::cout << "00003. "<< glGetError() << std::endl;
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	std::cout << "00004. "<< glGetError() << std::endl;*/
+	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_ALPHA_TEST);
 	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	//glDepthFunc(GL_LESS);
 
 

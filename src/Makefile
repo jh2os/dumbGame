@@ -1,6 +1,6 @@
 TARGET=engine
 OBJDIR = obj/
-OBJS = $(OBJDIR)dungeon.o $(OBJDIR)main.o $(OBJDIR)Logger.o $(OBJDIR)Settings.o $(OBJDIR)Timer.o $(OBJDIR)Audio.o $(OBJDIR)Mesh.o $(OBJDIR)glHelper.o $(OBJDIR)Model.o $(OBJDIR)WakeEngine.o  $(OBJDIR)Camera.o $(OBJDIR)PhysicsModel.o
+OBJS = $(OBJDIR)dungeon.o $(OBJDIR)main.o $(OBJDIR)Logger.o $(OBJDIR)Settings.o $(OBJDIR)Timer.o $(OBJDIR)Audio.o $(OBJDIR)Mesh.o $(OBJDIR)glHelper.o $(OBJDIR)Model.o $(OBJDIR)WakeEngine.o  $(OBJDIR)Camera.o $(OBJDIR)PhysicsModel.o $(OBJDIR)entity.o
 CC=gcc
 CXX=g++
 RM=rm -f
@@ -54,6 +54,9 @@ $(OBJDIR)PhysicsModel.o: wakeEngine/PhysicsModel.cpp wakeEngine/PhysicsModel.h
 
 $(OBJDIR)Model.o: wakeEngine/Model.cpp wakeEngine/Model.h
 	$(CXX) $(CPPFLAGS) $(LDLIBS) wakeEngine/Model.cpp -o $@
+
+$(OBJDIR)entity.o: entity.cpp entity.h
+		$(CXX) $(CPPFLAGS) $(LDLIBS) entity.cpp -o $@
 
 clean:
 	rm -f obj/*.o

@@ -14,7 +14,7 @@ void main()
 {
 
     vec4 test = texture2D(texUnit, TexCoord);
-    test = vec4(test.x, test.y, test.z, 1.0f);
+    //test = vec4(test.x, test.y, test.z, 1.0f);
 
     float ambientStrength = 0.5f;
     vec3 LightColor = vec3(1.0f, 1.0f, 1.0f);
@@ -30,8 +30,8 @@ void main()
     vec3 result = (ambient + diffuse) * objColor;
 
     vec4 outputc = vec4(result, test.w);
-    //if (test.w < 0.5)
-    //  discard;
+    if (outputc.w < 0.5)
+      discard;
 
     outputF = outputc;
 }

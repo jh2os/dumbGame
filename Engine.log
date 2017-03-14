@@ -19,3 +19,6 @@ Loaded in texture res/meshes/dirt/dirt.png texid: 1
 Loading model: tree.dae
 Loaded in texture res/meshes/tree/tree.png into surface
 Loaded in texture res/meshes/tree/tree.png texid: 2
+Loading model: mom.dae
+Loaded in texture res/meshes/mom/mom2.png into surface
+Loaded in texture res/meshes/mom/mom2.png texid: 3
