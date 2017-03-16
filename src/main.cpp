@@ -19,7 +19,7 @@ struct entity {
 	Model m;
 
 };
-
+const int JOYSTICK_DEAD_ZONE = 8000;
 int main() {
 
 	// Create our window
@@ -31,7 +31,7 @@ int main() {
 	unsigned int dungeonWidth = 100;
 	unsigned int dungeonHeight = 100;
 	int numberOfRooms = 50;
-	const int numOfEnemies = 100;
+	const int numOfEnemies = 200;
 
 	//gamestate("titleScreen");
 	// Set up views
@@ -121,6 +121,7 @@ int main() {
 	e->mesh["tree"] = new Mesh("res/meshes/tree" , "tree.dae");
 	e->mesh["tree"]->instance(instanceOffset);
 	e->mesh["mom"] = new Mesh("res/meshes/mom", "mom.dae");
+	e->mesh["batman"] = new Mesh("res/meshes/bat", "batman.dae");
 
 	//Mix_PlayMusic(e->audio.music["song"], 1);
 	// Game loop
@@ -325,7 +326,7 @@ int main() {
 				player.left = (dd->getTile(player.playerX - 1, player.playerY) == 1) ? true : false;
 			}
 			//std::cout << dd->getTile(player.playerX, player.playerY - 1) << std::endl;
-			if((player.up || player.right || player.down || player.left) && !player.moving){
+			if(true/*(player.up || player.right || player.down || player.left) && !player.moving*/){
 				for (int i = 0; i < numOfEnemies; i++){
 					while(!enemy[i].up && !enemy[i].down && !enemy[i].left && !enemy[i].right) {
 						int direction = (rand() % 4) + 1;
@@ -408,7 +409,7 @@ int main() {
 				e->glh.useProgram("program");
 				glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
 				enemy[i].model.bindUniform(e->glh.activeProgram, "MVP", &camera1);
-				e->mesh["mom"]->render(e->glh.activeProgram, "texUnit");
+				e->mesh["tree"]->render(e->glh.activeProgram, "texUnit");
 			}
 			SDL_GL_SwapWindow(e->window);
 		}

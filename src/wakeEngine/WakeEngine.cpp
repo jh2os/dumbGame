@@ -43,7 +43,16 @@ void WakeEngine::init(std::string settingsFile) {
 		log->closeLogFile();
 		exit(-1);
 	}
-
+	SDL_Joystick* gGameController = NULL;
+	//Check for joysticks
+	if( SDL_NumJoysticks() < 1 ) {
+		printf( "Warning: No joysticks connected!\n" );
+	} else { //Load joystick
+		gGameController = SDL_JoystickOpen( 0 );
+		if( gGameController == NULL ) {
+			printf( "Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError() );
+		}
+	}
 	log->writeLine("Creating OpenGL Context");
 	gl = SDL_GL_CreateContext(window);
 
