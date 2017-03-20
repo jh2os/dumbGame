@@ -1,0 +1,139 @@
+# depslib dependency file v1.0
+1489734896 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\dungeon.cpp
+	"dungeon.h"
+
+1489734896 c:\users\jh2os\onedrive\documents\development\dumbgame\src\dungeon.h
+	<cstddef>
+	<vector>
+	<stdlib.h>
+	<ctime>
+	<iostream>
+
+1489734896 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\entity.cpp
+	"entity.h"
+
+1489734896 c:\users\jh2os\onedrive\documents\development\dumbgame\src\entity.h
+	"wakeEngine/Model.h"
+
+1489734897 c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\model.h
+	"includes.h"
+	"Camera.h"
+	"PhysicsModel.h"
+
+1489817134 c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\includes.h
+	<GL/glew.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<GL/glext.h>
+	<vector>
+	<map>
+	<string>
+	<stdlib.h>
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<iostream>
+	<fstream>
+	<glm/glm.hpp>
+	<glm/gtx/transform.hpp>
+	"Logger.h"
+	"Settings.h"
+	"Timer.h"
+
+1489734897 c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\logger.h
+	<string>
+	<fstream>
+	<iostream>
+	<time.h>
+
+1489734897 c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\settings.h
+	<string>
+	<map>
+	<vector>
+
+1489734897 c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\timer.h
+	<string>
+	<map>
+	<vector>
+	<SDL2/SDL.h>
+
+1489734897 c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\camera.h
+	<glm/glm.hpp>
+	<glm/gtx/transform.hpp>
+
+1489734897 c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\physicsmodel.h
+	"includes.h"
+
+1490031517 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\main.cpp
+	"wakeEngine/WakeEngine.h"
+	"wakeEngine/Camera.h"
+	"wakeEngine/Model.h"
+	<iostream>
+	<stdlib.h>
+	<time.h>
+	"dungeon.h"
+	"entity.h"
+
+1489734897 c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\wakeengine.h
+	"includes.h"
+	"Mesh.h"
+	"glHelper.h"
+	"Audio.h"
+
+1489734897 c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\mesh.h
+	<assimp/Importer.hpp>
+	<assimp/scene.h>
+	<assimp/mesh.h>
+	<assimp/postprocess.h>
+	"includes.h"
+
+1489734897 c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\glhelper.h
+	"includes.h"
+
+1489734897 c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\audio.h
+	"includes.h"
+	<SDL2/SDL_mixer.h>
+
+1489734897 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\audio.cpp
+	"Audio.h"
+
+1490031540 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\camera.cpp
+	"Camera.h"
+	<iostream>
+
+1489734897 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\glhelper.cpp
+	"glHelper.h"
+	"Logger.h"
+	<iostream>
+
+1489734897 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\logger.cpp
+	<stddef.h>
+	"Logger.h"
+
+1489734897 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\mesh.cpp
+	"Mesh.h"
+	<iostream>
+
+1489734897 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\model.cpp
+	"Model.h"
+
+1489734897 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\physicsmodel.cpp
+	"PhysicsModel.h"
+	"Timer.h"
+	<iostream>
+
+1490029946 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\settings.cpp
+	<stddef.h>
+	<fstream>
+	<sstream>
+	"Logger.h"
+	"Settings.h"
+	<iostream>
+
+1489734897 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\timer.cpp
+	"Logger.h"
+	"Timer.h"
+
+1490031317 source:c:\users\jh2os\onedrive\documents\development\dumbgame\src\wakeengine\wakeengine.cpp
+	<stddef.h>
+	"WakeEngine.h"
+

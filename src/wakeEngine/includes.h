@@ -1,12 +1,13 @@
 #include <GL/glew.h>
-#include <GL/glut.h>
+//#include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glext.h>
-#include <GL/freeglut.h>
+//#include <GL/freeglut.h>
 #include <vector>
 #include <map>
 #include <string>
+#include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>

@@ -1,0 +1,6 @@
+Initializing SDL Mixing system
+Mix_Init Error: Failed to get required support
+Mix_Init Error: Mixer not built with MOD mikmod support
+Initializing WakeEngine
+Failed to open settings file: settings.conf
+Shutting down program

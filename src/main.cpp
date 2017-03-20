@@ -1,5 +1,7 @@
 // Program by Johnathan Waters (The Waters Guy)
 // 2016
+#define SDL_MAIN_HANDLED
+
 #define GL_FRAGMENT_PRECISION_HIGH 1
 
 #include "wakeEngine/WakeEngine.h"
@@ -20,7 +22,7 @@ struct entity {
 
 };
 const int JOYSTICK_DEAD_ZONE = 8000;
-int main() {
+int main( int argc, char *argv[]) {
 
 	// Create our window
 	WakeEngine *e = WakeEngine::Instance();
@@ -36,8 +38,9 @@ int main() {
 	//gamestate("titleScreen");
 	// Set up views
 	EngineCamera camera1(e->settings->i("resX"), e->settings->i("resY"));
-	glm::vec3 cam1pos = glm::vec3(0,20,15);
+	glm::vec3 cam1pos = glm::vec3(10,20,15);
 	glm::vec3 cam1ori = glm::vec3(0,0,0);
+
 	camera1.setPositionAndOrigin(cam1pos,cam1ori);
 	float cameraOffsety = 10;
 	float cameraOffsetz = 5;
@@ -60,14 +63,15 @@ int main() {
 	Entity player;
 	player.playerX = 0;
 	player.playerY = dungeonHeight / 2;
-	player.model.setScale(glm::vec3(1, 1, 1));
+	player.model.setScale(glm::vec3(0.8f, 1, 1));
 	player.model.setPosition(glm::vec3(0.0, 0, -(dungeonHeight / 2.0) + 0.5));
 	player.model.rotate(-20, glm::vec3(1,0,0));
 
 	Entity enemy[numOfEnemies];
-	for (int i = 0; i < numOfEnemies; i++)
+	for (int i = 0; i < numOfEnemies; i++){
 		enemy[i].model.rotate(-20, glm::vec3(1,0,0));
-
+		enemy[i].model.setScale(glm::vec3(0.8f,1.0f, 1.0f));
+	}
 	//float nZ = 0.0f; //+ 1 * heightScale;*/
 	models[0].setPosition(glm::vec3(0.0, 0.0, 0.0));
 
@@ -114,14 +118,16 @@ int main() {
 			}
 		}
 	}
+
 	e->audio.loadSound("jump", "res/audio/sounds/jump.wav");
 	e->audio.loadMusic("song", "res/audio/music/indianaJones.mp3");
+
 	e->mesh["dirt"] = new Mesh("res/meshes/dirt", "dirt.dae");
 	e->mesh["dirt"]->instance(dirtInstances);
 	e->mesh["tree"] = new Mesh("res/meshes/tree" , "tree.dae");
 	e->mesh["tree"]->instance(instanceOffset);
 	e->mesh["mom"] = new Mesh("res/meshes/mom", "mom.dae");
-	e->mesh["batman"] = new Mesh("res/meshes/bat", "batman.dae");
+	//e->mesh["batman"] = new Mesh("res/meshes/bat", "batman.dae");
 
 	//Mix_PlayMusic(e->audio.music["song"], 1);
 	// Game loop
@@ -360,7 +366,7 @@ int main() {
 			glm::vec3 playerPos = player.model.getPosition();
 			cam1ori = playerPos;
 			cam1ori.y = 0;
-			cam1pos.x = playerPos.x;
+			cam1pos.x = playerPos.x; //cam1pos.x;
 			cam1pos.y = /*playerPos.y +*/ cameraOffsety;
 			cam1pos.z = playerPos.z + cameraOffsetz;
 
@@ -409,7 +415,7 @@ int main() {
 				e->glh.useProgram("program");
 				glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
 				enemy[i].model.bindUniform(e->glh.activeProgram, "MVP", &camera1);
-				e->mesh["tree"]->render(e->glh.activeProgram, "texUnit");
+				e->mesh["mom"]->render(e->glh.activeProgram, "texUnit");
 			}
 			SDL_GL_SwapWindow(e->window);
 		}

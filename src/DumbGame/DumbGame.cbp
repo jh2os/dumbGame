@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="DumbGame" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../../DumbGame" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../../dumbGame" />
+				<Option object_output="./" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-lSDL2" />
+					<Add option="-lSDL2_image" />
+					<Add option="-lSDL2_mixer" />
+					<Add option="-lopengl32" />
+					<Add option="-lglu32" />
+					<Add option="-lglew32" />
+					<Add option="-lassimp" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="../dungeon.cpp" />
+		<Unit filename="../dungeon.h" />
+		<Unit filename="../entity.cpp" />
+		<Unit filename="../entity.h" />
+		<Unit filename="../main.cpp" />
+		<Unit filename="../map.h" />
+		<Unit filename="../wakeEngine/Audio.cpp" />
+		<Unit filename="../wakeEngine/Audio.h" />
+		<Unit filename="../wakeEngine/Camera.cpp" />
+		<Unit filename="../wakeEngine/Camera.h" />
+		<Unit filename="../wakeEngine/Logger.cpp" />
+		<Unit filename="../wakeEngine/Logger.h" />
+		<Unit filename="../wakeEngine/Mesh.cpp" />
+		<Unit filename="../wakeEngine/Mesh.h" />
+		<Unit filename="../wakeEngine/Model.cpp" />
+		<Unit filename="../wakeEngine/Model.h" />
+		<Unit filename="../wakeEngine/PhysicsModel.cpp" />
+		<Unit filename="../wakeEngine/PhysicsModel.h" />
+		<Unit filename="../wakeEngine/Settings.cpp" />
+		<Unit filename="../wakeEngine/Settings.h" />
+		<Unit filename="../wakeEngine/Texture.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="../wakeEngine/Texture.h" />
+		<Unit filename="../wakeEngine/Timer.cpp" />
+		<Unit filename="../wakeEngine/Timer.h" />
+		<Unit filename="../wakeEngine/WakeEngine.cpp" />
+		<Unit filename="../wakeEngine/WakeEngine.h" />
+		<Unit filename="../wakeEngine/glHelper.cpp" />
+		<Unit filename="../wakeEngine/glHelper.h" />
+		<Unit filename="../wakeEngine/includes.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

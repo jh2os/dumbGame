@@ -31,7 +31,7 @@ void WakeEngine::init(std::string settingsFile) {
 			   SDL_WINDOWPOS_UNDEFINED,
 			   settings->i("resX"),
 			   settings->i("resY"),
-			   SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE
+			   SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_ALLOW_HIGHDPI
 			   );
 
 	if(settings->s("fullscreen") == "yes")
@@ -45,17 +45,16 @@ void WakeEngine::init(std::string settingsFile) {
 	}
 	SDL_Joystick* gGameController = NULL;
 	//Check for joysticks
-	if( SDL_NumJoysticks() < 1 ) {
+	/*if( SDL_NumJoysticks() < 1 ) {
 		printf( "Warning: No joysticks connected!\n" );
 	} else { //Load joystick
 		gGameController = SDL_JoystickOpen( 0 );
 		if( gGameController == NULL ) {
 			printf( "Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError() );
 		}
-	}
+	}*/
 	log->writeLine("Creating OpenGL Context");
 	gl = SDL_GL_CreateContext(window);
-
 
 	glewExperimental = GL_TRUE;
 	glewInit();
@@ -66,7 +65,6 @@ void WakeEngine::init(std::string settingsFile) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//glDepthFunc(GL_LESS);
-
 
 
 }

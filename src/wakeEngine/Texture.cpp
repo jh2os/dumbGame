@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-int EngineTexture::loadFile(std::string surf) {
+int EngineTexture::loadFile(std::string filename) {
 
 	//std::cout << filename << std::endl;
 	GLuint TextureID = 0;
@@ -19,7 +19,7 @@ int EngineTexture::loadFile(std::string surf) {
   if(!surf){
 		Logger::Instance()->writeLine("Image failed to load: ",filename);
 		std::cout << "Errors" << std::endl;
-    return -1
+    return -1;
 	}
 	else {
 		Logger::Instance()->writeLine("Read texture: ",filename," correctly");
@@ -30,7 +30,7 @@ int EngineTexture::loadFile(std::string surf) {
 
 int loadSurface(SDL_Surface* sdlSurface) {
   //		SDL_Surface *tex = SDL_ConvertSurface(surf, &pf, SDL_SWSURFACE);
-  std::cout << "Texture dimentions " << surf->w << ":" << surf->h << std::endl;
+  std::cout << "Texture dimentions " << sdlSurface->w << ":" << sdlSurface->h << std::endl;
 
   glGenTextures(1, &TextureID);
   glBindTexture(GL_TEXTURE_2D, TextureID);

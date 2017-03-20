@@ -1,15 +1,13 @@
 #include "Camera.h"
-
+#include <iostream>
 using namespace std;
 EngineCamera::EngineCamera() {}
 
 EngineCamera::EngineCamera(int resX, int resY) {
-  projection = glm::perspective(glm::radians(45.0f), (float)resX/ resY, 0.1f, 200.f);
-
-  position = glm::vec3(0.0f, 0.0f, 2.0f);
+  projection = glm::perspective(glm::radians(45.0f), (float)(resX / resY), 0.1f, 200.f);
+  position = glm::vec3(0.0f, 0.0f, 1.0f);
   origin = glm::vec3(0.0f, 0.0f, 0.0f);
   orientation = glm::vec3 (0,1,0);
-
   compileCamera();
 }
 

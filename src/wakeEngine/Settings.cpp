@@ -19,23 +19,23 @@ void Settings::loadFile(std::string filename) {
 	std::ifstream settingsFile(filename.c_str());
 
 	if(settingsFile.is_open()) {
-		
+
 		int counter = 1;
 		std::string key;
 		int i;
 		float f;
 		std::string s;
-		
+
 		log->writeLine("Reading in settings file: ", filename);
 		while(std::getline(settingsFile, line)) {
 			if(!line.empty()) {
-				std::istringstream iss(line);		
+				std::istringstream iss(line);
 				std::string type;
 				iss >> type;
 				if ( type == "i") {
 					iss >> key >> i;
 
-					this->setI(key, i);								
+					this->setI(key, i);
 				}
 				else if ( type == "f") {
 					iss >> key >> f;
@@ -56,11 +56,11 @@ void Settings::loadFile(std::string filename) {
 		}
 
 	} else {
-		
 		log->writeLine("Failed to open settings file: ",filename);
 		log->writeLine("Shutting down program");
 		log->closeLogFile();
-		exit(-1);
+		//exit(-1);
+		//return -1
 	}
 }
 
