@@ -16,111 +16,89 @@
 using namespace std;
 
 void createShaders(WakeEngine *e);
+void instanceModels(	dungeon *dd,
+											int w,
+											int h,
+											unsigned int &layer1Count,
+											unsigned int &layer2Count,
+											std::vector<GLfloat> &layer1,
+											std::vector<GLfloat> &layer2);
 
 struct entity {
 	Model m;
 
 };
+
 const int JOYSTICK_DEAD_ZONE = 8000;
+
 int main( int argc, char *argv[]) {
 
-	// Create our window
+	// Inintialize engine systems =======================
 	WakeEngine *e = WakeEngine::Instance();
 	e->init("settings.conf");
 	createShaders(e);
-	srand (time(NULL));
+	//===================================================
 
 	unsigned int dungeonWidth = 100;
 	unsigned int dungeonHeight = 100;
 	int numberOfRooms = 50;
 	const int numOfEnemies = 200;
-
-	//gamestate("titleScreen");
-	// Set up views
-	EngineCamera camera1(e->settings->i("resX"), e->settings->i("resY"));
-	glm::vec3 cam1pos = glm::vec3(10,20,15);
-	glm::vec3 cam1ori = glm::vec3(0,0,0);
-
-	camera1.setPositionAndOrigin(cam1pos,cam1ori);
 	float cameraOffsety = 10;
 	float cameraOffsetz = 5;
-
 	float adder = -0.01f;
+	glm::vec3 cam1pos = glm::vec3(0,0,0);
+	glm::vec3 cam1ori = glm::vec3(0,0,0);
 	glm::vec3 lightPos = glm::vec3(50,-50,20);
+	GLint lightPosLoc = 0;
+	EngineCamera camera1(e->settings->i("resX"), e->settings->i("resY"));
 
-	e->glh.useProgram("program");
-	GLint lightPosLoc = glGetUniformLocation(e->glh.activeProgram, "lightPos");
-	glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
-
-	Model models[2];
-	//for(unsigned int i = 0; i < 10000; i++) {
-	models[0] = Model();
-	models[0].setScale(glm::vec3(1.f,1.0f,1.0f));
-
-	models[1] = Model();
-	models[1].setScale(glm::vec3(1.0, 1.0, 1.0));
+	Model models[2]; // Map Mesh layers
+	unsigned int itemCount = 0;
+	unsigned int dirtCount = 0;
+	std::vector<GLfloat> instanceOffset;
+	std::vector<GLfloat> dirtInstances;
 
 	Entity player;
+	Entity enemy[numOfEnemies];
+	dungeon *dd = NULL;
+
+	e->glh.useProgram("program");
+	lightPosLoc = glGetUniformLocation(e->glh.activeProgram, "lightPos");
+
+	models[0] = Model();
+	models[0].setScale(glm::vec3(1.0f, 1.0f, 1.0f));
+	models[1] = Model();
+	models[1].setScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
 	player.playerX = 0;
 	player.playerY = dungeonHeight / 2;
 	player.model.setScale(glm::vec3(0.8f, 1, 1));
 	player.model.setPosition(glm::vec3(0.0, 0, -(dungeonHeight / 2.0) + 0.5));
 	player.model.rotate(-20, glm::vec3(1,0,0));
 
-	Entity enemy[numOfEnemies];
 	for (int i = 0; i < numOfEnemies; i++){
 		enemy[i].model.rotate(-20, glm::vec3(1,0,0));
 		enemy[i].model.setScale(glm::vec3(0.8f,1.0f, 1.0f));
 	}
-	//float nZ = 0.0f; //+ 1 * heightScale;*/
-	models[0].setPosition(glm::vec3(0.0, 0.0, 0.0));
 
 	// SETTING UP INSTANCING DATA9+
-	int itemCount = 0;
-	int dirtCount = 0;
-	std::vector<GLfloat> instanceOffset;
-	std::vector<GLfloat> dirtInstances;
-	dungeon *dd = new dungeon(dungeonWidth, dungeonHeight, 0, 10, 10, numberOfRooms);
-	//dd->display();
-	for(unsigned int i = 0; i < dungeonWidth * dungeonHeight ; i++) {
-		if(dd->tiles[i].type != FLOOR) {
-			itemCount++;
-			unsigned int x = i % dungeonWidth;
-			unsigned int y = i / dungeonHeight;
-			float nY = (float)y; //+ varianceX;
-			float nX = (float)x;
-			instanceOffset.push_back(nX);
-			instanceOffset.push_back(0.0f);
-			instanceOffset.push_back(-nY);
-
-		} else if ( dd->tiles[i].type == FLOOR) {
-			dirtCount++;
-			unsigned int x = i % dungeonWidth;
-			unsigned int y = i / dungeonHeight;
-			float nY = (float)y; //+ varianceX;
-			float nX = (float)x;
-			dirtInstances.push_back(nX);
-			dirtInstances.push_back(0.0f);
-			dirtInstances.push_back(-nY);
-		}
-	}
+	dd = new dungeon(dungeonWidth, dungeonHeight, 0, 10, 10, numberOfRooms);
+	instanceModels(dd, dungeonWidth, dungeonHeight, itemCount, dirtCount, instanceOffset, dirtInstances);
 
 	for (int i = 0; i < numOfEnemies; i++) {
 		while (enemy[i].playerX == 0) {
-			//std::cout << "here" << std::endl;
 			int x = rand() % dungeonWidth;
 			int y = rand() % dungeonHeight;
 			if ( dd->getTile(x, y) == 1) {
 				enemy[i].playerX = x;
 				enemy[i].playerY = y;
 				enemy[i].model.setPosition(glm::vec3(x, 0.0, -y + 0.5f));
-				//std::cout << std::endl << enemy.playerX << "," << enemy.playerY << std::endl;
 			}
 		}
 	}
 
-	e->audio.loadSound("jump", "res/audio/sounds/jump.wav");
-	e->audio.loadMusic("song", "res/audio/music/indianaJones.mp3");
+	e->audio.loadSound("jump", "res/audio/sounds/jump2.wav");
+	e->audio.loadMusic("song", "res/audio/music/04. deadmau5 - Squid.mp3");
 
 	e->mesh["dirt"] = new Mesh("res/meshes/dirt", "dirt.dae");
 	e->mesh["dirt"]->instance(dirtInstances);
@@ -129,7 +107,8 @@ int main( int argc, char *argv[]) {
 	e->mesh["mom"] = new Mesh("res/meshes/mom", "mom.dae");
 	//e->mesh["batman"] = new Mesh("res/meshes/bat", "batman.dae");
 
-	//Mix_PlayMusic(e->audio.music["song"], 1);
+	Mix_PlayMusic(e->audio.music["song"], 1);
+	Mix_VolumeMusic(MIX_MAX_VOLUME/4);
 	// Game loop
 	//  > Handle Input
 	//	> Pause tickcount for logic and render
@@ -151,6 +130,7 @@ int main( int argc, char *argv[]) {
 	bool backward;
 	bool up;
 	bool down;
+	bool cameraBound = true;
 	float camSpeed = 0.5f;
 	while(running) {
 		while(SDL_PollEvent(&ev)) {
@@ -220,6 +200,10 @@ int main( int argc, char *argv[]) {
 							player.left = false;
 							break;
 						}
+						case SDLK_RSHIFT: {
+							cameraBound = (cameraBound) ? false : true;
+							break;
+						}
 						default:
 							break;
 					}
@@ -275,18 +259,6 @@ int main( int argc, char *argv[]) {
 		}
 
 		Timer::Instance()->newLoop();
-
-		//pModel2.rotate(-0.1, glm::vec3(0,0,1));
-		// Movement ======================================
-		//pModel.rotate(-1, glm::vec3(0,0,1));
-		/*if (pModel.getPosition().y <=	 0.0f) {
-			pModel.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-			jumpspeed = (jumpspeed >= 1.0) ? 1.0 : jumpspeed + 0.2;
-			pModel.verticalSpeed = jumpspeed;
-			//std::cout << jumpspeed << std::endl;
-			//Mix_PlayChannel(-1, e->audio.sound["jump"], 0);
-		}*/
-		//pModel.updatePosition();
 		if ( SDL_GetTicks() >= targetFrame) {
 
 			if (lightPos.x <= -30.0 || lightPos.x >= 130.0f) {
@@ -331,6 +303,10 @@ int main( int argc, char *argv[]) {
 			if (player.left){
 				player.left = (dd->getTile(player.playerX - 1, player.playerY) == 1) ? true : false;
 			}
+
+			if((player.up || player.right || player.down || player.left) && !player.moving){
+				Mix_PlayChannel( -1, e->audio.sound["jump"], 0 );
+			}
 			//std::cout << dd->getTile(player.playerX, player.playerY - 1) << std::endl;
 			if(true/*(player.up || player.right || player.down || player.left) && !player.moving*/){
 				for (int i = 0; i < numOfEnemies; i++){
@@ -364,12 +340,13 @@ int main( int argc, char *argv[]) {
 			}
 
 			glm::vec3 playerPos = player.model.getPosition();
-			cam1ori = playerPos;
-			cam1ori.y = 0;
-			cam1pos.x = playerPos.x; //cam1pos.x;
-			cam1pos.y = /*playerPos.y +*/ cameraOffsety;
-			cam1pos.z = playerPos.z + cameraOffsetz;
-
+			if (cameraBound) {
+				cam1ori = playerPos;
+				cam1ori.y = 0;
+				cam1pos.x = playerPos.x; //cam1pos.x;
+				cam1pos.y = /*playerPos.y +*/ cameraOffsety;
+				cam1pos.z = playerPos.z + cameraOffsetz;
+			}
 
 
 		//================================================
@@ -437,4 +414,37 @@ void createShaders(WakeEngine *e) {
 	e->glh.attachShader("program", "vert");
 	e->glh.attachShader("program", "frag");
 	e->glh.linkProgram("program");
+}
+
+void instanceModels(	dungeon *dd,
+											int w,
+											int h,
+											unsigned int &layer1Count,
+											unsigned int &layer2Count,
+											std::vector<GLfloat> &layer1,
+											std::vector<GLfloat> &layer2){
+
+	for(unsigned int i = 0; i < w * h ; i++) {
+		if(dd->tiles[i].type != FLOOR) {
+			layer1Count++;
+			unsigned int x = i % w;
+			unsigned int y = i / h;
+			float nY = (float)y; //+ varianceX;
+			float nX = (float)x;
+			layer1.push_back(nX);
+			layer1.push_back(0.0f);
+			layer1.push_back(-nY);
+
+		} else if ( dd->tiles[i].type == FLOOR) {
+			layer2Count++;
+			unsigned int x = i % w;
+			unsigned int y = i / h;
+			float nY = (float)y; //+ varianceX;
+			float nX = (float)x;
+			layer2.push_back(nX);
+			layer2.push_back(0.0f);
+			layer2.push_back(-nY);
+		}
+	}
+
 }

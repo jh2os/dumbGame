@@ -11,6 +11,8 @@ WakeEngine* WakeEngine::Instance() {
 
 void WakeEngine::init(std::string settingsFile) {
 
+	srand (time(NULL));
+	
 	log = Logger::Instance();
 	settings = Settings::Instance();
 
