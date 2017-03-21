@@ -20,6 +20,13 @@ void WakeEngine::init(std::string settingsFile) {
 	log->writeLine("Starting up SDL");
 	SDL_Init(SDL_INIT_EVERYTHING);
 
+	// Display size stuff
+	SDL_DisplayMode current;
+	SDL_GetCurrentDisplayMode(0, &current);
+	//std::cout << "width:" << current.w << "\theight:" << current.h << std::endl;
+	settings->setI("resX",current.w);
+	settings->setI("resY",current.h);
+
 	SDL_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -43,7 +50,7 @@ void WakeEngine::init(std::string settingsFile) {
 		log->closeLogFile();
 		exit(-1);
 	}
-	SDL_Joystick* gGameController = NULL;
+	//SDL_Joystick* gGameController = NULL;
 	//Check for joysticks
 	/*if( SDL_NumJoysticks() < 1 ) {
 		printf( "Warning: No joysticks connected!\n" );
