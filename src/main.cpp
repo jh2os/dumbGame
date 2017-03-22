@@ -1,8 +1,8 @@
 // Program by Johnathan Waters (The Waters Guy)
 // 2016
 #define SDL_MAIN_HANDLED
-
 #define GL_FRAGMENT_PRECISION_HIGH 1
+#define _WIN32_WINNT 0x0502
 
 #include "wakeEngine/WakeEngine.h"
 #include "wakeEngine/Camera.h"
@@ -13,6 +13,11 @@
 #include "dungeon.h"
 #include "entity.h"
 
+#if defined (__WIN32__)
+#define DIR "../"
+#else
+#define DIR "./"
+#endif
 using namespace std;
 
 void createShaders(WakeEngine *e);
@@ -32,10 +37,9 @@ struct entity {
 const int JOYSTICK_DEAD_ZONE = 8000;
 
 int main( int argc, char *argv[]) {
-
 	// Inintialize engine systems =======================
-	WakeEngine *e = WakeEngine::Instance();
-	e->init("settings.conf");
+    WakeEngine *e = WakeEngine::Instance();
+	e->init(DIR"settings.conf");
 	createShaders(e);
 	//===================================================
 
@@ -97,14 +101,16 @@ int main( int argc, char *argv[]) {
 		}
 	}
 
-	e->audio.loadSound("jump", "res/audio/sounds/jump2.wav");
-	e->audio.loadMusic("song", "res/audio/music/04. deadmau5 - Squid.mp3");
+	//cout << DIR"res/meshes/dirt" << endl;
 
-	e->mesh["dirt"] = new Mesh("res/meshes/dirt", "dirt.dae");
+	e->audio.loadSound("jump", DIR"res/audio/sounds/jump2.wav");
+	e->audio.loadMusic("song", DIR"res/audio/music/04. deadmau5 - Squid.mp3");
+
+	e->mesh["dirt"] = new Mesh(DIR"res/meshes/dirt", "dirt.dae");
 	e->mesh["dirt"]->instance(dirtInstances);
-	e->mesh["tree"] = new Mesh("res/meshes/tree" , "tree.dae");
+	e->mesh["tree"] = new Mesh(DIR"res/meshes/tree" , "tree.dae");
 	e->mesh["tree"]->instance(instanceOffset);
-	e->mesh["mom"] = new Mesh("res/meshes/mom", "mom.dae");
+	e->mesh["mom"] = new Mesh(DIR"res/meshes/mom", "mom.dae");
 	//e->mesh["batman"] = new Mesh("res/meshes/bat", "batman.dae");
 
 	Mix_PlayMusic(e->audio.music["song"], 1);
@@ -409,8 +415,8 @@ int main( int argc, char *argv[]) {
 void createShaders(WakeEngine *e) {
 	//Load in all OpenGL shaders for the program
 	e->glh.createProgram("program");
-	e->glh.loadShader("frag","res/shaders/simpleShader.frag",GL_FRAGMENT_SHADER);
-	e->glh.loadShader("vert","res/shaders/simpleShader.vert",GL_VERTEX_SHADER);
+	e->glh.loadShader("frag",DIR"res/shaders/simpleShader.frag",GL_FRAGMENT_SHADER);
+	e->glh.loadShader("vert",DIR"res/shaders/simpleShader.vert",GL_VERTEX_SHADER);
 	e->glh.attachShader("program", "vert");
 	e->glh.attachShader("program", "frag");
 	e->glh.linkProgram("program");

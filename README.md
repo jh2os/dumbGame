@@ -6,6 +6,9 @@ just download and unzip. Double click on dumbgame.exe
 ## Controls
 Keyboard:
 
+
+**Escape**: quit
+
 **Up/Down/Left/Right**: Move character
   
 **Right Shift**: Switch camera modes
