@@ -126,21 +126,23 @@ MeshObject::~MeshObject() {
 void MeshObject::render(GLint program, std::string textureUniform) {
 
 	glUseProgram(program);
-	GLint uniformTex = glGetUniformLocation(program, textureUniform.c_str());
 
+	GLint uniformTex = glGetUniformLocation(program, textureUniform.c_str());
+	glBindVertexArray(vao);
 	if (this->diffuseTexture != 0) {
 		//glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D,this->diffuseTexture);
 		glUniform1i(uniformTex, 0);
 	}
 
-	glBindVertexArray(vao);
+
 	glDrawElements(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, NULL);
 	//glDrawElementsInstanced(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, NULL, 100);
 
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
+
 }
 
 void MeshObject::renderInstanced(GLint program, std::string textureUniform, int instances){
@@ -195,7 +197,7 @@ Mesh::Mesh(std::string folder, std::string file) {
 				std::string file(path.C_Str());
 				std::string texpath = std::string(folder) + std::string("/") + std::string(path.C_Str());
 				//std::cout << std::endl <<" \t" << texpath << std::endl;
-				mesh[i]->diffuseTexture = loadTexture(texpath);
+				mesh[i]->diffuseTexture = EngineTextures::Instance()->loadFile(texpath);
 				//std::cout << "Thing " << mesh[i]->diffuseTexture << std::endl;
 
 			}
@@ -347,43 +349,6 @@ void putPixel32(SDL_Surface *surface, int x, int y, Uint32 pixel) {
 	pixels[(y * surface->w) +x] = pixel;
 }
 
-int loadTexture(std::string filename) {
-
-	//std::cout << "\tloading in texture right now: " << filename << std::endl;
-	glBindTexture(GL_TEXTURE_2D,0);
-	GLuint TextureID = 0;
-	SDL_Surface* surf;
-	surf = NULL;
-
-	surf = IMG_Load(filename.c_str());
-	if(!surf) {
-		std::cout << "IMG_Load: " << IMG_GetError() << std::endl;
-		Logger::Instance()->writeLine("IMG_Load ERROR: ",IMG_GetError());
-	} else {
-		Logger::Instance()->writeLine("Loaded in texture ",filename , " into surface");
-	}
-	glGenTextures(1, &TextureID);
-	//std::cout << "\tTHIS IS THE TEXTURE ID " << TextureID << std::endl;
-	glBindTexture(GL_TEXTURE_2D,TextureID);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
-	//glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	int Mode = GL_RGBA;
-
-	if(surf->format->BytesPerPixel == 3) {
-		Mode = GL_RGB;
-	} else if (surf->format->BytesPerPixel == 4) {
-		Mode = GL_RGBA;
-	}
-	glTexImage2D(	GL_TEXTURE_2D,0,GL_RGBA,surf->w,surf->h,0,GL_RGBA,GL_UNSIGNED_BYTE,surf->pixels);
-	Logger::Instance()->writeLine("Loaded in texture ",filename , " texid: ", TextureID);
-	SDL_FreeSurface(surf);
-	surf = NULL;
-	return TextureID;
-}
 
 void Mesh::instance(std::vector<GLfloat> instanceData) {
 	for (unsigned int i = 0; i < mesh.size(); i++) {

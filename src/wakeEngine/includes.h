@@ -17,3 +17,4 @@
 #include "Logger.h"
 #include "Settings.h"
 #include "Timer.h"
+#include "Texture.h"

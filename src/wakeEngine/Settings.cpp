@@ -44,7 +44,9 @@ void Settings::loadFile(std::string filename) {
 				else if (type == "s") {
 					iss >> key;
 					getline(iss, s);
-					this->setS(key, s);
+					int start = s.find_first_not_of(' ');
+					int len = s.length();
+					this->setS(key, s.substr(start, len));
 				}
 				else if (type == "#") {}
 				else {

@@ -38,6 +38,5 @@ public:
 	GLint tex;
 };
 
-int loadTexture(std::string filename);
 
 #endif

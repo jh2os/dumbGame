@@ -3,13 +3,21 @@
 
 #include "includes.h"
 
-class EngineTexture {
+class EngineTextures {
+public:
+  static EngineTextures* Instance();
+  EngineTextures() {};
+  EngineTextures(Timer const&){};
 private:
-  std::vector<GLint> texture;
+  static EngineTextures* m_pInstance;
+
+//private:
+//  std::vector<GLint> texture;
 public:
   int loadFile(std::string file);
   int loadSurface(SDL_Surface* sdlSurface);
-  void useTexture(GLint texNum, std::string texture);
+  int generateTextureID();
+//  void useTexture(GLint texNum, std::string texture);
 };
 
 #endif

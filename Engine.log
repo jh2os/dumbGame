@@ -1,6 +1,29 @@
-Initializing SDL Mixing system
-Mix_Init Error: Failed to get required support
-Mix_Init Error: Mixer not built with MOD mikmod support
-Initializing WakeEngine
-Failed to open settings file: ../settings.conf
-Shutting down program
+Initializing SDL Mixing system
+Mix_Init Error: Failed to get required support
+Mix_Init Error: Mixer not built with MOD mikmod support
+Initializing WakeEngine
+Reading in settings file: ./settings.conf
+Reading in settings file: keys.conf
+Starting up SDL
+Creating Window
+Creating OpenGL Context
+Creating Shader Program: program
+Reading in shader "frag" file: ./res/shaders/simpleShader.frag
+Reading in shader "vert" file: ./res/shaders/simpleShader.vert
+Program: 1	Attaching shader: 3
+Program: 1	Attaching shader: 2
+Compiling shader program
+
+Creating Shader Program: text
+Reading in shader "frag" file: ./res/shaders/text.frag
+Reading in shader "vert" file: ./res/shaders/text.vert
+Program: 4	Attaching shader: 6
+Program: 4	Attaching shader: 5
+Compiling shader program
+
+Loading model: dirt.dae
+Loaded in texture ./res/meshes/dirt/dirt.png into surface
+Loading model: tree.dae
+Loaded in texture ./res/meshes/tree/tree.png into surface
+Loading model: mom.dae
+Loaded in texture ./res/meshes/mom/mom2.png into surface

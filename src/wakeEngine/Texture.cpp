@@ -1,57 +1,67 @@
 #include "Texture.h"
 
-int EngineTexture::loadFile(std::string filename) {
+EngineTextures* EngineTextures::m_pInstance = NULL;
 
-	//std::cout << filename << std::endl;
+EngineTextures* EngineTextures::Instance() {
+	if(!m_pInstance)
+		m_pInstance = new EngineTextures;
+	return m_pInstance;
+}
+
+int EngineTextures::generateTextureID() {
+	glBindTexture(GL_TEXTURE_2D,0);
 	GLuint TextureID = 0;
+	glGenTextures(1, &TextureID);
+	glBindTexture(GL_TEXTURE_2D,TextureID);
+	return TextureID;
+}
+
+
+int EngineTextures::loadFile(std::string filename) {
 	SDL_Surface* surf;
-	SDL_PixelFormat *fmt;
-
-
 	surf = IMG_Load(filename.c_str());
-	fmt = surf->format;
-	if(fmt->BitsPerPixel!=8){
-  	std::cout << std::endl << "this is not an 8 bit pixel format size: " << (int)fmt->BytesPerPixel  << std::endl;
-  	//return(-1);
+	if(!surf) {
+		std::cout << "IMG_Load: " << IMG_GetError() << std::endl;
+		Logger::Instance()->writeLine("IMG_Load ERROR: ",IMG_GetError());
+	} else {
+		Logger::Instance()->writeLine("Loaded in texture ",filename , " into surface");
 	}
 
-
-  if(!surf){
-		Logger::Instance()->writeLine("Image failed to load: ",filename);
-		std::cout << "Errors" << std::endl;
-    return -1;
-	}
-	else {
-		Logger::Instance()->writeLine("Read texture: ",filename," correctly");
-    return loadSurface(surf);
-  }
+	return this->loadSurface(surf);
 
 }
 
-int loadSurface(SDL_Surface* sdlSurface) {
-  //		SDL_Surface *tex = SDL_ConvertSurface(surf, &pf, SDL_SWSURFACE);
-  std::cout << "Texture dimentions " << sdlSurface->w << ":" << sdlSurface->h << std::endl;
+int EngineTextures::loadSurface(SDL_Surface* sdlSurface) {
 
-  glGenTextures(1, &TextureID);
-  glBindTexture(GL_TEXTURE_2D, TextureID);
+		SDL_Surface* surf = sdlSurface;
 
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+		GLuint TextureID = this->generateTextureID();
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
+		//glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		int Mode = GL_RGBA;
 
-  //glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
-  int Mode = GL_RGB;
+		if(surf->format->BytesPerPixel == 3) {
+			Mode = GL_RGB;
+		} else if (surf->format->BytesPerPixel == 4) {
+			Mode = GL_RGBA;
+		}
 
-  if(surf->format->BytesPerPixel == 3) {
-    Mode = GL_RGB;
-  } else if (surf->format->BytesPerPixel == 4) {
-    Mode = GL_RGBA;
-  }
-  glTexImage2D(	GL_TEXTURE_2D,0,Mode,surf->w,surf->h,0,Mode,GL_UNSIGNED_BYTE,surf->pixels);
+		glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_RGBA,sdlSurface->w,
+				sdlSurface->h,
+				0,
+				GL_RGBA,
+				GL_UNSIGNED_BYTE,
+				sdlSurface->pixels);
 
-  std::cout << "\t\tTexture: " << TextureID;
-  glBindTexture(GL_TEXTURE_2D, 0);
-  SDL_FreeSurface(surf);
-  return TextureID;
+		SDL_FreeSurface(surf);
+		surf = NULL;
+		return TextureID;
+
 }

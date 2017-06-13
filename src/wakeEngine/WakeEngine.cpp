@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include "WakeEngine.h"
+#include "Key.hpp"
 
 WakeEngine* WakeEngine::m_pInstance = NULL;
 
@@ -11,13 +12,16 @@ WakeEngine* WakeEngine::Instance() {
 
 void WakeEngine::init(std::string settingsFile) {
 
+
 	srand (time(NULL));
-	
+
 	log = Logger::Instance();
 	settings = Settings::Instance();
 
 	log->writeLine("Initializing WakeEngine");
 	settings->loadFile(settingsFile);
+	settings->loadFile("keys.conf");
+	bindKeyConversions(engineKeyConversion);
 
 	log->writeLine("Starting up SDL");
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -52,16 +56,16 @@ void WakeEngine::init(std::string settingsFile) {
 		log->closeLogFile();
 		exit(-1);
 	}
-	//SDL_Joystick* gGameController = NULL;
+	SDL_Joystick* gGameController = NULL;
 	//Check for joysticks
-	/*if( SDL_NumJoysticks() < 1 ) {
+	if( SDL_NumJoysticks() < 1 ) {
 		printf( "Warning: No joysticks connected!\n" );
 	} else { //Load joystick
 		gGameController = SDL_JoystickOpen( 0 );
 		if( gGameController == NULL ) {
 			printf( "Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError() );
 		}
-	}*/
+	}
 	log->writeLine("Creating OpenGL Context");
 	gl = SDL_GL_CreateContext(window);
 
@@ -95,4 +99,9 @@ void WakeEngine::shutdown() {
 	SDL_DestroyWindow(this->window);
 	SDL_Quit();
 
+}
+
+std::string WakeEngine::getKeyCommand(SDL_Keycode key) {
+	//std::cout << engineKeyConversion[SDLK_0] << std::endl;
+	return settings->s( engineKeyConversion[key] );
 }

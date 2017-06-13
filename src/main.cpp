@@ -34,6 +34,71 @@ struct entity {
 
 };
 
+struct position {
+	int id;
+	int x;
+	int y;
+	position(int nX, int nY, int nId) {
+		id = nId;
+		x = nX;
+		y = nY;
+	}
+};
+
+class collisionMap {
+private:
+	int width;
+	int height;
+public:
+	vector<int> id;
+	vector<int> col;
+
+	void resetMap(int x, int y) {
+		width = x;
+		height = y;
+		if(id.size() == 0){
+			for(int i = 0; i < x * y; i++) {
+				id.push_back(0);
+			}
+
+		}
+		for(int i = 0; i < x * y; i++) {
+			id.at(i) = 0;
+		}
+	}
+	void clearMap() {
+		id.clear();
+	}
+	int checkSpace(int x, int y) {
+		return id[x * width + y];
+	}
+	void setSpace(int x, int y, int val) {
+		id[x*width + y] = val;
+	}
+};
+
+struct box {
+	box(float nX, float nY, float nW, float nH) {
+		x = nX;
+		y = nY;
+		w = nW;
+		h = nH;
+	}
+	float x;
+	float y;
+	float w;
+	float h;
+	string textureName;
+	bool isClicked(int xI, int yI) {
+		if ((x >= xI && xI <= (x + w)) && (y >= yI && yI <= y+h))
+			return true;
+		else
+			return false;
+	}
+
+};
+
+
 const int JOYSTICK_DEAD_ZONE = 8000;
 
 int main( int argc, char *argv[]) {
@@ -89,6 +154,10 @@ int main( int argc, char *argv[]) {
 	dd = new dungeon(dungeonWidth, dungeonHeight, 0, 10, 10, numberOfRooms);
 	instanceModels(dd, dungeonWidth, dungeonHeight, itemCount, dirtCount, instanceOffset, dirtInstances);
 
+	collisionMap map;
+	map.resetMap(dungeonWidth, dungeonHeight);
+	std::cout << "here" << std::endl;
+
 	for (int i = 0; i < numOfEnemies; i++) {
 		while (enemy[i].playerX == 0) {
 			int x = rand() % dungeonWidth;
@@ -112,6 +181,11 @@ int main( int argc, char *argv[]) {
 	e->mesh["tree"]->instance(instanceOffset);
 	e->mesh["mom"] = new Mesh(DIR"res/meshes/mom", "mom.dae");
 	//e->mesh["batman"] = new Mesh("res/meshes/bat", "batman.dae");
+
+
+	e->text.loadFont(e->glh.program("text"),DIR"res/fonts/Note_this.ttf", 40);
+
+
 
 	Mix_PlayMusic(e->audio.music["song"], 1);
 	Mix_VolumeMusic(MIX_MAX_VOLUME/4);
@@ -138,129 +212,96 @@ int main( int argc, char *argv[]) {
 	bool down;
 	bool cameraBound = true;
 	float camSpeed = 0.5f;
+	vector<position> collisionQue;
+
 	while(running) {
 		while(SDL_PollEvent(&ev)) {
 				if(ev.type == SDL_QUIT) {
 					running = false;
 				}
 				if(ev.type == SDL_KEYDOWN) {
-					switch(ev.key.keysym.sym) {
-						case SDLK_ESCAPE: {
+					string command = e->getKeyCommand(ev.key.keysym.sym);
+
+					if (command == "quit") {
 							running = false;
-						}
-						case SDLK_w: {
+					}
+					if (command == "cameraUp") {
 							backward = false;
 							forward = true;
-							break;
-						}
-						case SDLK_s: {
+					}
+					if (command == "cameraDown") {
 							backward = true;
 							forward = false;
-							break;
-						}
-						case SDLK_a: {
-							left = true;
-							right = false;
-							break;
-						}
-						case SDLK_d: {
-							right = true;
-							left = false;
-							break;
-						}
-						case SDLK_SPACE: {
-							up = true;
-							down = false;
-							break;
-						}
-						case SDLK_LSHIFT: {
-							up = false;
-							down = true;
-							break;
-						}
-						case SDLK_RIGHT: {
-							player.up = false;
-							player.down = false;
-							player.right = true;
-							player.left = false;
-							break;
-						}
-						case SDLK_LEFT: {
-							player.up = false;
-							player.down = false;
-							player.right = false;
-							player.left = true;
-							break;
-						}
-						case SDLK_UP:{
-							player.up = true;
-							player.down = false;
-							player.right = false;
-							player.left = false;
-							break;
-						}
-						case SDLK_DOWN: {
-							player.up = false;
-							player.down = true;
-							player.right = false;
-							player.left = false;
-							break;
-						}
-						case SDLK_RSHIFT: {
-							cameraBound = (cameraBound) ? false : true;
-							break;
-						}
-						default:
-							break;
+					}
+					if (command == "cameraLeft") {
+						left = true;
+						right = false;
+					}
+					if(command == "cameraRight") {
+						right = true;
+						left = false;
+					}
+					if (command == "cameraRaise"){
+						up = true;
+						down = false;
+					}
+					if (command == "cameraLower"){
+						up = false;
+						down = true;
+					}
+					if (command == "moveRight") {
+						player.up = false;
+						player.down = false;
+						player.right = true;
+						player.left = false;
+					}
+					if (command == "moveLeft") {
+						player.up = false;
+						player.down = false;
+						player.right = false;
+						player.left = true;
+					}
+					if (command == "moveUp") {
+						player.up = true;
+						player.down = false;
+						player.right = false;
+						player.left = false;
+					}
+					if (command == "moveDown") {
+						player.up = false;
+						player.down = true;
+						player.right = false;
+						player.left = false;
+					}
+				 	if (command == "toggleCamera") {
+						cameraBound = (cameraBound) ? false : true;
 					}
 
 				}
 				if(ev.type == SDL_KEYUP) {
-					switch(ev.key.keysym.sym) {
-						case SDLK_w: {
-							forward = false;
-							break;
-						}
-						case SDLK_s: {
-							backward = false;
-							break;
-						}
-						case SDLK_a: {
-							left = false;
-							break;
-						}
-						case SDLK_d: {
-							right = false;
-							break;
-						}
-						case SDLK_SPACE: {
-							up = false;
-							break;
-						}
-						case SDLK_LSHIFT: {
-							down = false;
-							break;
-						}
-						case SDLK_RIGHT: {
-							player.right = false;
-							break;
-						}
-						case SDLK_LEFT: {
-							player.left = false;
-							break;
-						}
-						case SDLK_UP:{
-							player.up = false;
-							break;
-						}
-						case SDLK_DOWN: {
-							player.down = false;
-							break;
-						}
+					string command = e->getKeyCommand(ev.key.keysym.sym);
 
-						default:
-							break;
-					}
+					if (command == "cameraUp")
+						forward = false;
+					if (command == "cameraDown")
+						backward = false;
+					if (command == "cameraLeft")
+						left = false;
+					if (command == "cameraRight")
+						right = false;
+					if (command == "cameraRaise")
+						up = false;
+					if (command == "cameraLower")
+						down = false;
+					if (command == "moveRight")
+						player.right = false;
+					if (command == "moveLeft")
+						player.left = false;
+					if (command == "moveUp")
+						player.up = false;
+					if (command == "moveDown")
+						player.down = false;
+
 				}
 		}
 
@@ -314,33 +355,62 @@ int main( int argc, char *argv[]) {
 				Mix_PlayChannel( -1, e->audio.sound["jump"], 0 );
 			}
 			//std::cout << dd->getTile(player.playerX, player.playerY - 1) << std::endl;
-			if(true/*(player.up || player.right || player.down || player.left) && !player.moving*/){
+			if((player.up || player.right || player.down || player.left) && !player.moving){
+				map.resetMap(dungeonWidth, dungeonHeight);
+
+				int playerx = player.playerX;
+				int playery = player.playerY;
+				if (player.up)
+					playery += 1;
+				if (player.down)
+					playery -= 1;
+				if (player.left)
+					playerx -= 1;
+				if (player.right)
+					playerx += 1;
+				map.setSpace(playerx,playery, 1);
 				for (int i = 0; i < numOfEnemies; i++){
-					while(!enemy[i].up && !enemy[i].down && !enemy[i].left && !enemy[i].right) {
+					int fallthrough = 0;
+					while(!enemy[i].up && !enemy[i].down && !enemy[i].left && !enemy[i].right && fallthrough < 4) {
 						int direction = (rand() % 4) + 1;
 						switch(direction){
 							case 1:
-								enemy[i].up = (dd->getTile(enemy[i].playerX, enemy[i].playerY + 1) == 1) ? true : false;
+								if(map.checkSpace(enemy[i].playerX, enemy[i].playerY + 1) == 0){
+									enemy[i].up = (dd->getTile(enemy[i].playerX, enemy[i].playerY + 1) == 1) ? true : false;
+									map.setSpace(enemy[i].playerX,enemy[i].playerY + 1, 2);
+								}
 								break;
 							case 2:
-								enemy[i].right = (dd->getTile(enemy[i].playerX + 1, enemy[i].playerY) == 1) ? true : false;
+								if(map.checkSpace(enemy[i].playerX +1, enemy[i].playerY) == 0) {
+									enemy[i].right = (dd->getTile(enemy[i].playerX + 1, enemy[i].playerY) == 1) ? true : false;
+									map.setSpace(enemy[i].playerX +1,enemy[i].playerY, 2);
+								}
 								break;
 							case 3:
-								enemy[i].down = (dd->getTile(enemy[i].playerX, enemy[i].playerY - 1) == 1) ? true : false;
+								if(map.checkSpace(enemy[i].playerX, enemy[i].playerY - 1) == 0) {
+									enemy[i].down = (dd->getTile(enemy[i].playerX, enemy[i].playerY - 1) == 1) ? true : false;
+									map.setSpace(enemy[i].playerX, enemy[i].playerY - 1, 2);
+								}
 								break;
 							case 4:
-								enemy[i].left = (dd->getTile(enemy[i].playerX - 1, enemy[i].playerY) == 1) ? true : false;
+								if(map.checkSpace(enemy[i].playerX -1, enemy[i].playerY) == 0) {
+									enemy[i].left = (dd->getTile(enemy[i].playerX - 1, enemy[i].playerY) == 1) ? true : false;
+									map.setSpace(enemy[i].playerX -1, enemy[i].playerY, 2);
+								}
 								break;
 							case 0:
 								break;
 							}
+						fallthrough++;
 						}
+
 						//enemy[i].move();
 
 					}
 			}
 			player.move();
-			for (int i = 0; i < numOfEnemies; i++){
+			//std::cout << "now here" << std::endl;
+			for (int i = 0; i < numOfEnemies ; i++){
 				enemy[i].move();
 				enemy[i].up = enemy[i].down = enemy[i].left = enemy[i].right = false;
 			}
@@ -378,6 +448,7 @@ int main( int argc, char *argv[]) {
 
 
 
+			glEnable(GL_DEPTH_TEST);
 
 			e->glh.useProgram("program");
 			glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
@@ -400,6 +471,28 @@ int main( int argc, char *argv[]) {
 				enemy[i].model.bindUniform(e->glh.activeProgram, "MVP", &camera1);
 				e->mesh["mom"]->render(e->glh.activeProgram, "texUnit");
 			}
+
+			//std::cout << "program " <<  e->glh.program("text") << e->glh.program("program") << std::endl;
+			glUseProgram(0);
+			glDisable(GL_DEPTH_TEST);
+			e->glh.useProgram("text");
+			e->text.render(
+				e->glh.program("text"),
+				"Fus Ro Dahh",
+				0.0f,
+				0.0f,
+				e->settings->i("resX"),
+				e->settings->i("resY")
+			);
+			e->text.render(
+				e->glh.program("text"),
+				"Hello World!",
+				0.0f,
+				0.5f,
+				e->settings->i("resX"),
+				e->settings->i("resY")
+			);
+
 			SDL_GL_SwapWindow(e->window);
 		}
 		//================================================
@@ -420,6 +513,13 @@ void createShaders(WakeEngine *e) {
 	e->glh.attachShader("program", "vert");
 	e->glh.attachShader("program", "frag");
 	e->glh.linkProgram("program");
+	std::cout << "created shaders" << std::endl;
+	e->glh.createProgram("text");
+	e->glh.loadShader("frag",DIR"res/shaders/text.frag",GL_FRAGMENT_SHADER);
+	e->glh.loadShader("vert",DIR"res/shaders/text.vert",GL_VERTEX_SHADER);
+	e->glh.attachShader("text", "vert");
+	e->glh.attachShader("text", "frag");
+	e->glh.linkProgram("text");
 }
 
 void instanceModels(	dungeon *dd,
