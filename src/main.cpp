@@ -7,6 +7,7 @@
 #include "wakeEngine/WakeEngine.h"
 #include "wakeEngine/Camera.h"
 #include "wakeEngine/Model.h"
+#include "wakeEngine/Square.h"
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
@@ -156,7 +157,7 @@ int main( int argc, char *argv[]) {
 
 	collisionMap map;
 	map.resetMap(dungeonWidth, dungeonHeight);
-	std::cout << "here" << std::endl;
+	//std::cout << "here" << std::endl;
 
 	for (int i = 0; i < numOfEnemies; i++) {
 		while (enemy[i].playerX == 0) {
@@ -183,8 +184,8 @@ int main( int argc, char *argv[]) {
 	//e->mesh["batman"] = new Mesh("res/meshes/bat", "batman.dae");
 
 
-	e->text.loadFont(e->glh.program("text"),DIR"res/fonts/Note_this.ttf", 40);
-
+	e->text.loadFont(e->glh.program("text"),DIR"res/fonts/Note_this.ttf", 100);
+	Square thebox = Square(e->glh.program("square"),-1.0,-.75, 2.0, 0.25);
 
 
 	Mix_PlayMusic(e->audio.music["song"], 1);
@@ -472,23 +473,17 @@ int main( int argc, char *argv[]) {
 				e->mesh["mom"]->render(e->glh.activeProgram, "texUnit");
 			}
 
+			glm::vec4 color = {0.0, 0.0, 0.0, 0.4};
+			thebox.render(color, e->settings->i("resX"), e->settings->i("resY"));
 			//std::cout << "program " <<  e->glh.program("text") << e->glh.program("program") << std::endl;
 			glUseProgram(0);
 			glDisable(GL_DEPTH_TEST);
 			e->glh.useProgram("text");
 			e->text.render(
 				e->glh.program("text"),
-				"Fus Ro Dahh",
-				0.0f,
-				0.0f,
-				e->settings->i("resX"),
-				e->settings->i("resY")
-			);
-			e->text.render(
-				e->glh.program("text"),
-				"Hello World!",
-				0.0f,
-				0.5f,
+				"Into the Woods I Must Go",
+				-1.0f,
+				-0.98f,
 				e->settings->i("resX"),
 				e->settings->i("resY")
 			);
@@ -513,13 +508,21 @@ void createShaders(WakeEngine *e) {
 	e->glh.attachShader("program", "vert");
 	e->glh.attachShader("program", "frag");
 	e->glh.linkProgram("program");
-	std::cout << "created shaders" << std::endl;
+	//std::cout << "created shaders" << std::endl;
 	e->glh.createProgram("text");
 	e->glh.loadShader("frag",DIR"res/shaders/text.frag",GL_FRAGMENT_SHADER);
 	e->glh.loadShader("vert",DIR"res/shaders/text.vert",GL_VERTEX_SHADER);
 	e->glh.attachShader("text", "vert");
 	e->glh.attachShader("text", "frag");
 	e->glh.linkProgram("text");
+
+	e->glh.createProgram("square");
+	e->glh.loadShader("frag",DIR"res/shaders/square.frag",GL_FRAGMENT_SHADER);
+	e->glh.loadShader("vert",DIR"res/shaders/square.vert",GL_VERTEX_SHADER);
+	e->glh.attachShader("square", "vert");
+	e->glh.attachShader("square", "frag");
+	e->glh.linkProgram("square");
+
 }
 
 void instanceModels(	dungeon *dd,

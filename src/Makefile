@@ -1,10 +1,10 @@
 TARGET=engine
 OBJDIR = obj/
-OBJS = $(OBJDIR)dungeon.o $(OBJDIR)main.o $(OBJDIR)Logger.o $(OBJDIR)Settings.o $(OBJDIR)Timer.o $(OBJDIR)Texture.o $(OBJDIR)Audio.o $(OBJDIR)Mesh.o $(OBJDIR)glHelper.o $(OBJDIR)Model.o $(OBJDIR)WakeEngine.o  $(OBJDIR)Camera.o $(OBJDIR)PhysicsModel.o $(OBJDIR)Text.o $(OBJDIR)entity.o
+OBJS = $(OBJDIR)dungeon.o $(OBJDIR)main.o $(OBJDIR)Logger.o $(OBJDIR)Settings.o $(OBJDIR)Timer.o $(OBJDIR)Texture.o $(OBJDIR)Audio.o $(OBJDIR)Mesh.o $(OBJDIR)glHelper.o $(OBJDIR)Model.o $(OBJDIR)WakeEngine.o  $(OBJDIR)Camera.o $(OBJDIR)PhysicsModel.o $(OBJDIR)Text.o $(OBJDIR)Square.o $(OBJDIR)entity.o
 CC=gcc
 CXX=g++
 RM=rm -f
-CPPFLAGS= -g -std=gnu++11 -Wall -c  -I/usr/include/freetype2  
+CPPFLAGS= -g -std=gnu++11 -Wall -c  -I/usr/include/freetype2
 CPPFLAGSNOWARNING = -g -std=gnu++11 -c
 LDFLAGS = -Wall -g
 LDLIBS= -lSDL2 -lSDL2_image -lSDL2_mixer -lGL -lglut -lGLU -lGLEW -lassimp -lpng -lfreetype
@@ -60,6 +60,9 @@ $(OBJDIR)Model.o: wakeEngine/Model.cpp wakeEngine/Model.h
 
 $(OBJDIR)Text.o: wakeEngine/Text.cpp wakeEngine/Text.h
 	$(CXX) $(CPPFLAGS) $(LDLIBS) wakeEngine/Text.cpp -o $@
+
+$(OBJDIR)Square.o: wakeEngine/Square.cpp wakeEngine/Square.h
+	$(CXX) $(CPPFLAGS) $(LDLIBS) wakeEngine/Square.cpp -o $@
 
 $(OBJDIR)entity.o: entity.cpp entity.h
 		$(CXX) $(CPPFLAGS) $(LDLIBS) entity.cpp -o $@

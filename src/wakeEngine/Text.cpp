@@ -1,7 +1,7 @@
 #include "Text.h"
 
 Text::Text() {
-  std::cout << "trying to initalize freetpe" << std::endl;
+  //std::cout << "trying to initalize freetpe" << std::endl;
   int error = FT_Init_FreeType(&this->ft);
   if(error) {
     fprintf(stderr, "Could not init freetype library\n");
@@ -30,12 +30,12 @@ void Text::loadFont(string fontFile) {
 void Text::loadFont(GLuint program, string fontFile, int fontSize) {
 
   glUseProgram(program);
-  std::cout << "did I get here" << std::endl;
+  //std::cout << "did I get here" << std::endl;
   attribute_coord = glGetAttribLocation(program, "coord");
 	uniform_tex = glGetUniformLocation(program, "tex");
 	uniform_color = glGetUniformLocation(program, "color");
   glGenVertexArrays(1, &vao);
-  std::cout << attribute_coord << " " << uniform_tex << " " << uniform_color << std::endl;
+  //std::cout << attribute_coord << " " << uniform_tex << " " << uniform_color << std::endl;
   glGenBuffers(1, &vbo);
 
   this->loadFont(fontFile);
@@ -44,7 +44,7 @@ void Text::loadFont(GLuint program, string fontFile, int fontSize) {
 
 void Text::setFontSize(int size) {
   FT_Set_Pixel_Sizes(this->face, 0, size);
-  for (int i = 32; i < 127; i++) {
+  /*for (int i = 32; i < 127; i++) {
     std::cout << (char)i << std::endl;
 
     if(FT_Load_Char(this->face, (char)i, FT_LOAD_RENDER)) {
@@ -54,7 +54,7 @@ void Text::setFontSize(int size) {
     else {
       this->glyph[i] = this->face->glyph;
     }
-  }
+  }*/
 
   // Now we need to set up the texture for displaying things
   //glBindTexture(GL_TEXTURE_2D, 0);
@@ -90,7 +90,7 @@ void Text::render(GLuint program, string text, float x, float y, int windowX, in
     if (FT_Load_Char(face, currentLetter, FT_LOAD_RENDER))
 		  continue;
 
-    std::cout << g->bitmap.width << std::endl;
+    //std::cout << g->bitmap.width << std::endl;
     glTexImage2D(
       GL_TEXTURE_2D,
       0,

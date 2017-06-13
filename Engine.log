@@ -21,6 +21,13 @@ Program: 4	Attaching shader: 6
 Program: 4	Attaching shader: 5
 Compiling shader program
 
+Creating Shader Program: square
+Reading in shader "frag" file: ./res/shaders/square.frag
+Reading in shader "vert" file: ./res/shaders/square.vert
+Program: 7	Attaching shader: 9
+Program: 7	Attaching shader: 8
+Compiling shader program
+
 Loading model: dirt.dae
 Loaded in texture ./res/meshes/dirt/dirt.png into surface
 Loading model: tree.dae
