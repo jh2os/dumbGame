@@ -72,7 +72,7 @@
           </technique_common>
         </source>
         <source id="Plane-mesh-normals">
-          <float_array id="Plane-mesh-normals-array" count="3">0 -1 0</float_array>
+          <float_array id="Plane-mesh-normals-array" count="3">0 1 0</float_array>
           <technique_common>
             <accessor source="#Plane-mesh-normals-array" count="1" stride="3">
               <param name="X" type="float"/>

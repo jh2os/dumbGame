@@ -12,7 +12,7 @@ Square::Square(GLuint nprogram, float nx, float ny, float nw, float nh) {
   glUseProgram(program);
   this->coord = glGetAttribLocation(this->program, "coord");
   this->color = glGetUniformLocation(this->program, "color");
-  std::cout << "coord " << this->coord << " " << this->color << std::endl;
+//  std::cout << "coord " << this->coord << " " << this->color << std::endl;
 }
 void Square::render(glm::vec4 color, int resX, int resY) {
   glBindVertexArray(this->vao);

@@ -46,6 +46,7 @@ void WakeEngine::init(std::string settingsFile) {
 			   settings->i("resY"),
 			   SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_ALLOW_HIGHDPI
 			   );
+	SDL_ShowCursor(SDL_DISABLE);
 
 	if(settings->s("fullscreen") == "yes")
 	 	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);

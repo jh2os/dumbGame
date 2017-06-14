@@ -119,7 +119,9 @@ int main( int argc, char *argv[]) {
 	glm::vec3 cam1pos = glm::vec3(0,0,0);
 	glm::vec3 cam1ori = glm::vec3(0,0,0);
 	glm::vec3 lightPos = glm::vec3(50,-50,20);
+	glm::vec4 lightDir = glm::vec4(0,0,0,0);
 	GLint lightPosLoc = 0;
+	GLint lightPosDir = 0;
 	EngineCamera camera1(e->settings->i("resX"), e->settings->i("resY"));
 
 	Model models[2]; // Map Mesh layers
@@ -134,6 +136,7 @@ int main( int argc, char *argv[]) {
 
 	e->glh.useProgram("program");
 	lightPosLoc = glGetUniformLocation(e->glh.activeProgram, "lightPos");
+	lightPosDir = glGetUniformLocation(e->glh.activeProgram, "lightDir");
 
 	models[0] = Model();
 	models[0].setScale(glm::vec3(1.0f, 1.0f, 1.0f));
@@ -338,7 +341,7 @@ int main( int argc, char *argv[]) {
 				cam1ori.y -= camSpeed;
 			}
 
-			lightPos.x = lightPos.x + adder;
+			//lightPos.x = lightPos.x + adder;
 			if (player.up) {
 					player.up = (dd->getTile(player.playerX, player.playerY + 1) == 1) ? true : false;
 			}
@@ -417,6 +420,11 @@ int main( int argc, char *argv[]) {
 			}
 
 			glm::vec3 playerPos = player.model.getPosition();
+			lightPos.x = playerPos.x ;
+			lightPos.y = playerPos.y + 10;
+			lightPos.z = playerPos.z ;
+			lightDir = glm::vec4(playerPos.x, playerPos.y, playerPos.z, 10.0f);
+
 			if (cameraBound) {
 				cam1ori = playerPos;
 				cam1ori.y = 0;
@@ -453,22 +461,26 @@ int main( int argc, char *argv[]) {
 
 			e->glh.useProgram("program");
 			glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+			glUniform4f(lightPosDir, playerPos.x, playerPos.y, playerPos.z, lightDir.w);
 			models[0].bindUniform(e->glh.activeProgram, "MVP", &camera1);
 			e->mesh["tree"]->renderInstanced(e->glh.activeProgram, "texUnit", itemCount);
 
 			e->glh.useProgram("program");
 			glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+			glUniform4f(lightPosDir, playerPos.x, playerPos.y, playerPos.z, lightDir.w);
 			models[1].bindUniform(e->glh.activeProgram, "MVP", &camera1);
 			e->mesh["dirt"]->renderInstanced(e->glh.activeProgram, "texUnit", dirtCount + 1);
 
 			e->glh.useProgram("program");
 			glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+			glUniform4f(lightPosDir, playerPos.x, playerPos.y, playerPos.z, lightDir.w);
 			player.model.bindUniform(e->glh.activeProgram, "MVP", &camera1);
 			e->mesh["mom"]->render(e->glh.activeProgram, "texUnit");
 
 			for (int i = 0; i < numOfEnemies; i++) {
 				e->glh.useProgram("program");
 				glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+				glUniform4f(lightPosDir, playerPos.x, playerPos.y, playerPos.z, lightDir.w);
 				enemy[i].model.bindUniform(e->glh.activeProgram, "MVP", &camera1);
 				e->mesh["mom"]->render(e->glh.activeProgram, "texUnit");
 			}
