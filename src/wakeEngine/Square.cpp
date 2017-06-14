@@ -1,7 +1,14 @@
 #include "Square.h"
 
-Square::Square(GLuint nprogram, float nx, float ny, float nw, float nh) {
+Square::Square() {
 
+}
+
+Square::Square(GLuint nprogram, float nx, float ny, float nw, float nh) {
+    this->init(nprogram, nx, ny, nw, nh);
+}
+
+void Square::init(GLuint nprogram, float nx, float ny, float nw, float nh) {
   this->x = nx;
   this->y = ny;
   this->h = nh;
@@ -12,8 +19,10 @@ Square::Square(GLuint nprogram, float nx, float ny, float nw, float nh) {
   glUseProgram(program);
   this->coord = glGetAttribLocation(this->program, "coord");
   this->color = glGetUniformLocation(this->program, "color");
-//  std::cout << "coord " << this->coord << " " << this->color << std::endl;
+  //  std::cout << "coord " << this->coord << " " << this->color << std::endl;
+
 }
+
 void Square::render(glm::vec4 color, int resX, int resY) {
   glBindVertexArray(this->vao);
   glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
@@ -33,5 +42,6 @@ void Square::render(glm::vec4 color, int resX, int resY) {
   glBufferData(GL_ARRAY_BUFFER, sizeof(box), box, GL_DYNAMIC_DRAW);
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
+  glDisableVertexAttribArray(this->coord);
   glBindVertexArray(0);
 }

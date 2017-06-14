@@ -26,4 +26,17 @@ public:
   void move();
 };
 
+
+struct position {
+	int id;
+	int x;
+	int y;
+	position(int nX, int nY, int nId) {
+		id = nId;
+		x = nX;
+		y = nY;
+	}
+};
+
+
 #endif

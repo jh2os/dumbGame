@@ -1,6 +1,10 @@
 TARGET=engine
 OBJDIR = obj/
-OBJS = $(OBJDIR)dungeon.o $(OBJDIR)main.o $(OBJDIR)Logger.o $(OBJDIR)Settings.o $(OBJDIR)Timer.o $(OBJDIR)Texture.o $(OBJDIR)Audio.o $(OBJDIR)Mesh.o $(OBJDIR)glHelper.o $(OBJDIR)Model.o $(OBJDIR)WakeEngine.o  $(OBJDIR)Camera.o $(OBJDIR)PhysicsModel.o $(OBJDIR)Text.o $(OBJDIR)Square.o $(OBJDIR)entity.o
+OBJS = $(OBJDIR)dungeon.o $(OBJDIR)main.o $(OBJDIR)Logger.o $(OBJDIR)Settings.o\
+ $(OBJDIR)Timer.o $(OBJDIR)Texture.o $(OBJDIR)Audio.o $(OBJDIR)Mesh.o \
+ $(OBJDIR)glHelper.o $(OBJDIR)Model.o $(OBJDIR)WakeEngine.o  $(OBJDIR)Camera.o \
+ $(OBJDIR)PhysicsModel.o $(OBJDIR)Text.o $(OBJDIR)Square.o $(OBJDIR)entity.o \
+ $(OBJDIR)Game1.o
 CC=gcc
 CXX=g++
 RM=rm -f
@@ -67,6 +71,10 @@ $(OBJDIR)Square.o: wakeEngine/Square.cpp wakeEngine/Square.h
 $(OBJDIR)entity.o: entity.cpp entity.h
 		$(CXX) $(CPPFLAGS) $(LDLIBS) entity.cpp -o $@
 
+$(OBJDIR)Game1.o: Game1.cpp Game1.h Manager.hpp
+		$(CXX) $(CPPFLAGS) $(LDLIBS) Game1.cpp -o $@
+
+.PHONY: clean
 
 clean:
-	rm -f obj/*.o
+	rm -rf obj/*.o

@@ -5,7 +5,9 @@
 
 class Square {
 public:
+  Square();
   Square(GLuint program, float x, float y, float w, float h);
+  void init(GLuint program, float x, float y, float w, float h);
   void render(glm::vec4 color, int resX, int resY);
 private:
   float x;
