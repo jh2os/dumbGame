@@ -52,6 +52,7 @@
     down = false;
     cameraBound = true;
     playerPos = player.model.getPosition();
+    camSpeed = 0.5f;
 
     // SETTING UP INSTANCING DATA9+
     dd = new dungeon(dungeonWidth, dungeonHeight, 0, 10, 10, numberOfRooms);
@@ -141,6 +142,7 @@
         player.left = false;
       }
       if (command == "toggleCamera") {
+        //std::cout << "toggle Camera" << std::endl;
         cameraBound = (cameraBound) ? false : true;
       }
 

@@ -17,7 +17,7 @@ void main()
     vec4 test = texture2D(texUnit, TexCoord);
     //test = vec4(test.x, test.y, test.z, 1.0f);
 
-    float ambientStrength = 0.1f;
+    float ambientStrength = 0.5f;
     vec3 LightColor = vec3(0.5f, 0.5f, 1.0f);
     vec3 spotlightColor = vec3(1.0f, 1.0f, 1.0f);
     vec3 ambient = ambientStrength * LightColor * test.xyz;
